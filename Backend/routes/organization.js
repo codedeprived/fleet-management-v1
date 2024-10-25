@@ -1,34 +1,32 @@
 // routes/organization.js
 const express = require('express');
-const Organization = require('../models/Organization');
+
+// routes/organization.js
+const {
+  getAllOrganizations,
+  addOrganization,
+  updateOrganization,
+  deleteOrganization,
+  findOrganizationByName
+} = require('../controllers/organizationController');
 
 const router = express.Router();
 
-// GET route to fetch all organizations
-router.get('/', async (req, res) => {
-  try {
-    const organizations = await Organization.findAll();
-    res.json(organizations);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching organizations', error });
-  }
-});
 
-// POST route to add a new organization
-router.post('/', async (req, res) => {
-  const { name, address, contact_number, email } = req.body;
+// GET all organizations  ROUTE- http://localhost:5001/api/organizations
+router.get('/', getAllOrganizations);
 
-  try {
-    const newOrganization = await Organization.create({
-      name,
-      address,
-      contact_number,
-      email,
-    });
-    res.status(201).json(newOrganization);
-  } catch (error) {
-    res.status(500).json({ message: 'Error adding organization', error });
-  }
-});
+// POST a new organization  ROUTE-http://localhost:5001/api/organizations
+router.post('/', addOrganization);
+
+// PUT (update) an organization by ID  ROUTE-http://localhost:5001/api/organizations/id
+router.put('/:id', updateOrganization);
+
+// DELETE an organization by ID  ROUTE-http://localhost:5001/api/organizations/id
+router.delete('/:id', deleteOrganization);
+
+// GET an organization by name  ROUTE-http://localhost:5001/api/organizations/name/name of organization 
+router.get('/name/:name', findOrganizationByName);
+
 
 module.exports = router;
