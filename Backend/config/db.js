@@ -2,7 +2,7 @@
 const { Sequelize } = require('sequelize');
 
 // Create a new Sequelize instance
-const sequelize = new Sequelize('fleet-managementv1', 'postgres', 'admin123', {
+const sequelize = new Sequelize('fleet-managementv1', 'postgres', 'pgadmin', {
   host: 'localhost',
   dialect: 'postgres',
   logging: false, // Set to console.log to see SQL queries

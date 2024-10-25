@@ -1,37 +1,27 @@
-const { Driver } = require('../models/Driver'); // Adjust path as needed
-const { Organization } = require('../models/Organization'); // Adjust path as needed
+const Driver = require('../models/Driver'); // Ensure correct import
 const bcrypt = require('bcrypt');
 
 // Register function
 const register = async (req, res) => {
-  const { organization, username, email, phone_number, license_number, password } = req.body;
-
+  const { organization_id, username, email, phone_number, license_number, password } = req.body; // Use organization_id
+  console.log(organization_id); // Log the organization_id for debugging
   try {
-    // Check if organization exists
-    let org = await Organization.findOne({ where: { name: organization } });
-
-    // If organization not found, create a new one
-    if (!org) {
-      org = await Organization.create({
-        name: organization,
-        // Add other necessary fields, like address and contact_number
-        address: 'Default Address', // Set a default or received value
-        contact_number: '000-000-0000', // Set a default or received value
-        email: 'default@example.com' // Set a default or received value
-      });
+    // Check if the organization_id is provided
+    if (!organization_id) {
+      return res.status(400).json({ message: 'Organization ID is required.' });
     }
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create the new driver with the found or created organization ID
+    // Create the new driver with the organization_id
     const newDriver = await Driver.create({
-      organization_id: org.organization_id, // Use organization ID from DB
+      organization_id, // Use organization_id directly from the request body
       username,
-      email,
-      phone_number,
-      license_number,
       password_hash: hashedPassword,
+      email,
+      license_number,
+      phone_number,
     });
 
     // Respond with success message
