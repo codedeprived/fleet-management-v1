@@ -8,16 +8,7 @@ const Fleet = sequelize.define('Fleet', {
     primaryKey: true,
     autoIncrement: true
   },
-    vehicle_name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    references: { model: 'organizations', key: 'organization_id' }
-  },
-    organization_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: { model: 'organizations', key: 'organization_id' }
-  },
+  
   driver_id: {
     type: DataTypes.INTEGER,
     allowNull: true,

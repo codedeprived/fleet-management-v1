@@ -1,7 +1,6 @@
 // routes/auth.js
 const express = require('express');
 const { register } = require('../controllers/authController');
-const Organization = require('../models/Organization')
 
 const router = express.Router();
 

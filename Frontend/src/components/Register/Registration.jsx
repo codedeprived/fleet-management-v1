@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import './Registration.css';
 
 const Registration = () => {
   const [formData, setFormData] = useState({
-    organization_id: '', // Changed to organization_id
     username: '',
     email: '',
     phone_number: '',
@@ -12,28 +12,7 @@ const Registration = () => {
     reenter_password: ''
   });
 
-  const [organizations, setOrganizations] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Fetch organizations from the backend
-  useEffect(() => {
-    const fetchOrganizations = async () => {
-      try {
-        const response = await fetch('http://localhost:5001/api/organizations');
-        if (response.ok) {
-          const data = await response.json();
-          setOrganizations(data);
-          setIsLoading(false);
-        } else {
-          console.error('Failed to fetch organizations');
-        }
-      } catch (error) {
-        console.error('Error fetching organizations:', error);
-      }
-    };
-
-    fetchOrganizations();
-  }, []);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -56,6 +35,7 @@ const Registration = () => {
       if (response.ok) {
         const result = await response.json();
         console.log('Registration successful:', result);
+        navigate('/login'); // Redirect to login page
       } else {
         const errorData = await response.json();
         console.log('Registration failed:', response.statusText, errorData);
@@ -73,28 +53,6 @@ const Registration = () => {
           <div className="details personal">
             <span className="title">Personal Details</span>
             <div className="fields">
-              {/* Organization dropdown */}
-              <div className="input-field">
-                <label>Organization</label>
-                <select
-                  name="organization_id" // Changed to organization_id
-                  value={formData.organization_id} // Update to match state
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="" disabled>Select organization</option>
-                  {isLoading ? (
-                    <option>Loading organizations...</option>
-                  ) : (
-                    organizations.map(org => (
-                      <option key={org.organization_id} value={org.organization_id}>
-                        {org.name}  {/* Display the name but use the ID */}
-                      </option>
-                    ))
-                  )}
-                </select>
-              </div>
-
               {/* Other form fields */}
               <div className="input-field">
                 <label>Username</label>

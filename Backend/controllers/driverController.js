@@ -19,12 +19,11 @@ const getAllDrivers = async (req, res) => {
  * @route POST /api/drivers
  */
 const addDriver = async (req, res) => {
-  const { organization_id, username, password_hash, email, license_number, phone_number } = req.body;
+  const { username, password_hash, email, license_number, phone_number } = req.body; // Removed organization_id
 
   try {
     // Create a new driver entry in the database
     const newDriver = await Driver.create({
-      organization_id,
       username,
       password_hash,
       email,

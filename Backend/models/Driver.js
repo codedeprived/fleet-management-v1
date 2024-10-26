@@ -8,11 +8,7 @@ const Driver = sequelize.define('Driver', {
     primaryKey: true,
     autoIncrement: true
   },
-  organization_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: { model: 'organizations', key: 'organization_id' }
-  },
+  
   username: {
     type: DataTypes.STRING,
     unique: true,
