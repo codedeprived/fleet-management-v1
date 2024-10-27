@@ -4,7 +4,12 @@ const cors = require('cors'); // Add this line
 const { authenticateDatabase } = require('./config/db');
 const authRoutes = require('./routes/auth');
 const driverRoutes = require('./routes/driverRoutes');
-const fleetRoutes = require('./routes/fleetRoutes'); // Fixed typo here
+const fleetRoutes = require('./routes/fleetRoutes'); 
+const adminRoutes = require('./routes/adminRoutes')
+const tripRoutes = require('./routes/tripRoutes')
+const maintenanceRoutes = require('./routes/maintenanceRoutes')
+
+
 const app = express();
 const PORT = process.env.PORT || 5001;
 
@@ -16,7 +21,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/drivers', driverRoutes); // Add the driver routes 
-app.use('/api/fleet', fleetRoutes); // Use the correct fleet routes
+app.use('/api/fleet', fleetRoutes); // Add the fleet routes 
+app.use('/api/admin', adminRoutes); // Add the admiin routes 
+app.use('/api/trip', tripRoutes); // Add the trip routes 
+app.use('/api/maintenance', maintenanceRoutes); // Add the maintenance routes 
 
 // Define a route to handle GET requests to the root URL ('/')
 app.get('/', (req, res) => {

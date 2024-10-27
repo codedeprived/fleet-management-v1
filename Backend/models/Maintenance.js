@@ -41,3 +41,4 @@ const Maintenance = sequelize.define('Maintenance', {
 });
 
 module.exports = Maintenance;
+
