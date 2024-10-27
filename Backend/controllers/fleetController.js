@@ -2,7 +2,7 @@ const Fleet = require('../models/Fleet');
 
 /**
  * Get all fleet vehicles
- * @route GET /api/fleet
+ * @route GET /api/fleet 
  */
 const getAllFleet = async (req, res) => {
   try {
