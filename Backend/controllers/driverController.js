@@ -111,6 +111,21 @@ const findDriverByUsername = async (req, res) => {
     res.status(500).json({ message: 'Error finding driver', error: error.message }); // Return 500 status code with error message
   }
 };
+const findDriverByEmail = async (req, res) => {
+  const { email } = req.params; // Extract username from request params
+
+  try {
+    const driver = await Driver.findOne({ where: { email } }); // Find driver by username
+    if (!driver) {
+      return res.status(404).json({ message: 'Driver not found' }); // Return 404 if driver doesn't exist
+    }
+
+    res.json(driver); // Return the found driver as JSON
+  } catch (error) {
+    console.error('Error finding driver:', error); // Log the error for debugging purposes
+    res.status(500).json({ message: 'Error finding driver', error: error.message }); // Return 500 status code with error message
+  }
+};
 
 module.exports = {
   getAllDrivers,
@@ -118,4 +133,5 @@ module.exports = {
   updateDriver,
   deleteDriver,
   findDriverByUsername,
+  findDriverByEmail
 };
