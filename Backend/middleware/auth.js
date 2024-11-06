@@ -1,27 +1,18 @@
-const JWT =  require('jsonwebtoken');
+// middleware/auth.js
+const jwt = require('jsonwebtoken');
 
-const authMiddelware = async (req, res, next) => {
-    const authHeader = req.headers.authorization;  // Updated to use 'authorization' key
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.send({
-            success: false,
-            message: "Unauthorized User. Try Again."
-        });
-    }
+const authMiddleware = (req, res, next) => {
+    const token = req.header('Authorization')?.replace('Bearer ', ''); // Get token from the Authorization header
+
+    if (!token) return res.status(401).json({ message: 'Access denied. No token provided.' }); // If no token, deny access
 
     try {
-        const token = authHeader.split(' ')[1];  // Get the token after "Bearer"
-        const token_decode = JWT.verify(token, process.env.JWT_SECRET);
-        req.body.userId = token_decode.id;  // Assuming `id` is the user ID in token payload
-        next();
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify the token
+        req.user = decoded; // Attach decoded payload (including driverId) to the request object
+        next(); // Continue to the next middleware/route handler
     } catch (error) {
-        console.log(error);
-        return res.send({
-            success: false,
-            message: "Error in the user auth API.",
-            error
-        });
+        res.status(400).json({ message: 'Invalid token.' }); // Handle invalid token
     }
 };
 
-module.exports = authMiddelware;
+module.exports = authMiddleware;

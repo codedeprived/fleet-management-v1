@@ -7,7 +7,7 @@ const { getAllTrips, addTrip, updateTrip, deleteTrip, findTripsByDriver } = requ
 router.get('/',authMiddleware, getAllTrips);
 
 // Route to add a new trip
-router.post('/', authMiddleware, addTrip);
+router.post('/', authMiddleware,addTrip);
 
 // Route to update a trip by ID
 router.put('/:id', authMiddleware, updateTrip);
@@ -16,6 +16,6 @@ router.put('/:id', authMiddleware, updateTrip);
 router.delete('/:id', authMiddleware, deleteTrip);
 
 // Route to find trips by driver ID
-router.get('/driver/:driver_id', authMiddleware, findTripsByDriver);
+router.get('/driver', authMiddleware, findTripsByDriver);
 
 module.exports = router;

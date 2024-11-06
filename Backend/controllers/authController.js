@@ -1,6 +1,6 @@
 const Driver = require('../models/Driver'); // Ensure correct import
 const bcrypt = require('bcrypt');
-const JWT = require('jsonwebtoken'); // Import JWT
+const jwt = require('jsonwebtoken'); // Import JWT
 
 
 
@@ -34,27 +34,27 @@ const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const driver = await Driver.findOne({ where: { email } });
+    const driver = await Driver.findOne({ where: { email } }); // Find the driver by email
     if (!driver) {
-      return res.status(404).json({ message: 'Driver not found' });
+      return res.status(404).json({ message: 'Driver not found' }); // If driver is not found, return an error
     }
 
-    const isPasswordValid = await bcrypt.compare(password, driver.password_hash);
+    const isPasswordValid = await bcrypt.compare(password, driver.password_hash); // Compare the password with the hashed password
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'Invalid credentials' }); // If passwords don't match, return an error
     }
 
-    // Generate JWT token
-    const token = JWT.sign(
-      { id: driver.id, username: driver.username, email: driver.email },
+    // Generate JWT token with driver ID and email
+    const token = jwt.sign(
+      { id: driver.driver_id, username: driver.username, email: driver.email },
       process.env.JWT_SECRET,
-      { expiresIn: '1h' } // Token validity
+      { expiresIn: '1h' } // Token expires in 1 hour
     );
 
     return res.status(200).json({
       message: 'Login successful!',
       driver: { id: driver.id, username: driver.username, email: driver.email },
-      token, // Send the token in response
+      token, // Send token in the response
     });
   } catch (error) {
     console.error('Error logging in driver:', error);
