@@ -5,7 +5,8 @@ const {
   addMaintenanceRecord,
   updateMaintenanceRecord,
   deleteMaintenanceRecord,
-  findMaintenanceRecordsByVehicle
+  findMaintenanceRecordsByVehicle,
+  findMaintenanceRecordsByDriver
 } = require('../controllers/maintenanceController');
 
 // Route to get all maintenance records
@@ -23,4 +24,6 @@ router.delete('/:id', deleteMaintenanceRecord);
 // Route to find maintenance records by vehicle ID
 router.get('/vehicle/:vehicle_id', findMaintenanceRecordsByVehicle);
 
+// Route to find maintenance records by vehicle ID
+router.get('/driver/:driver_id', findMaintenanceRecordsByDriver); // New route
 module.exports = router;

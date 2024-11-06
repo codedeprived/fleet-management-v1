@@ -85,10 +85,10 @@ const deleteDriver = async (req, res) => {
     }
 
     await driver.destroy(); // Delete driver from the database
-    res.json({ message: 'Driver deleted successfully' }); // Return success message
+    res.json({ success:true , message: 'Driver deleted successfully' }); // Return success message
   } catch (error) {
     console.error('Error deleting driver:', error); // Log the error for debugging purposes
-    res.status(500).json({ message: 'Error deleting driver', error: error.message }); // Return 500 status code with error message
+    res.status(500).json({ success:false ,  message: 'Error deleting driver', error: error.message }); // Return 500 status code with error message
   }
 };
 

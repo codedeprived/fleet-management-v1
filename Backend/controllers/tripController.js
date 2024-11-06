@@ -1,127 +1,94 @@
-const Trip = require('../models/Trip');
+// controllers/tripController.js
+const Trip = require('../models/Trip'); // Sequelize Trip model
 
 // Get all trips
-/**
- * Fetches all trips from the database.
- * @param {object} req - Express request object
- * @param {object} res - Express response object
- * @returns {object} List of trips in JSON format or error message
- */
 const getAllTrips = async (req, res) => {
-  try {
-    const trips = await Trip.findAll();
-    res.json(trips);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching trips', error });
-  }
+    try {
+        const trips = await Trip.findAll(); // Fetch all trips
+        res.status(200).json(trips);
+    } catch (error) {
+        res.status(500).json({ message: 'Error retrieving trips', error });
+    }
 };
 
 // Add a new trip
-/**
- * Adds a new trip to the database.
- * @param {object} req - Express request object containing trip details
- * @param {object} res - Express response object
- * @returns {object} Created trip in JSON format or error message
- */
 const addTrip = async (req, res) => {
-  const { driver_id, start_location, end_location, start_time, end_time, distance_km, purpose } = req.body;
-
-  try {
-    const newTrip = await Trip.create({
-      driver_id,
-      start_location,
-      end_location,
-      start_time,
-      end_time,
-      distance_km,
-      purpose,
-    });
-    res.status(201).json(newTrip);
-  } catch (error) {
-    res.status(500).json({ message: 'Error adding trip', error });
-  }
+    try {
+        const { driver_id, start_location, end_location } = req.body; // Destructure the required fields
+        const trip = await Trip.create({
+            driver_id,
+            start_location,
+            end_location,
+            // other fields...
+        });
+        res.status(201).json(trip);
+    } catch (error) {
+        res.status(500).json({ message: 'Error adding trip', error });
+    }
 };
 
 // Update a trip by ID
-/**
- * Updates an existing trip's details by its ID.
- * @param {object} req - Express request object containing updated trip details
- * @param {object} res - Express response object
- * @returns {object} Updated trip or error message
- */
 const updateTrip = async (req, res) => {
-  const { id } = req.params;
-  const { start_location, end_location, start_time, end_time, distance_km, purpose } = req.body;
+    try {
+        const { id } = req.params;
+        const updatedTrip = await Trip.update(req.body, {
+            where: { id },
+            returning: true, // Get the updated trip back
+        });
 
-  try {
-    const trip = await Trip.findByPk(id);
-    if (!trip) {
-      return res.status(404).json({ message: 'Trip not found' });
+        if (updatedTrip[0] === 0) return res.status(404).json({ message: 'Trip not found' });
+
+        res.status(200).json(updatedTrip[1][0]); // Return the updated trip
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating trip', error });
     }
-
-    trip.start_location = start_location || trip.start_location;
-    trip.end_location = end_location || trip.end_location;
-    trip.start_time = start_time || trip.start_time;
-    trip.end_time = end_time || trip.end_time;
-    trip.distance_km = distance_km || trip.distance_km;
-    trip.purpose = purpose || trip.purpose;
-
-    await trip.save();
-    res.json(trip);
-  } catch (error) {
-    res.status(500).json({ message: 'Error updating trip', error });
-  }
 };
 
 // Delete a trip by ID
-/**
- * Deletes a trip by its ID.
- * @param {object} req - Express request object containing trip ID
- * @param {object} res - Express response object
- * @returns {object} Success message or error message
- */
 const deleteTrip = async (req, res) => {
-  const { id } = req.params;
+    try {
+        const { id } = req.params;
+        const deletedTrip = await Trip.destroy({
+            where: { id },
+        });
 
-  try {
-    const trip = await Trip.findByPk(id);
-    if (!trip) {
-      return res.status(404).json({ message: 'Trip not found' });
+        if (deletedTrip === 0) return res.status(404).json({ message: 'Trip not found' });
+
+        res.status(200).json({ message: 'Trip deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting trip', error });
     }
-
-    await trip.destroy();
-    res.json({ message: 'Trip deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error deleting trip', error });
-  }
 };
 
-// Find trips by driver ID
-/**
- * Finds trips by the driver's ID.
- * @param {object} req - Express request object containing driver ID
- * @param {object} res - Express response object
- * @returns {object} List of trips for the driver or error message
- */
+// Find trips by driver ID (using JWT's driverId)
 const findTripsByDriver = async (req, res) => {
-  const { driver_id } = req.params;
-
   try {
-    const trips = await Trip.findAll({ where: { driver_id } });
-    if (!trips.length) {
-      return res.status(404).json({ message: 'No trips found for this driver' });
+    const driverId = req.user.id; // Access the driverId from the JWT payload (req.user.id is set by authMiddleware)
+    if (!driverId) {
+      return res.status(400).json({ message: 'Driver ID not found in the token.' });
     }
 
-    res.json(trips);
+    // Assuming you have the driver_id field in the trips table
+    const trips = await Trip.findAll({
+      where: { driver_id: driverId },
+    });
+
+    if (!trips || trips.length === 0) {
+      return res.status(404).json({ message: 'No trips found for this driver.' });
+    }
+
+    res.status(200).json(trips); // Return the trips for the logged-in driver
   } catch (error) {
-    res.status(500).json({ message: 'Error finding trips', error });
+    console.error('Error retrieving trips by driver:', error);
+    res.status(500).json({ message: 'Error retrieving trips by driver', error: error.message });
   }
 };
+
 
 module.exports = {
-  getAllTrips,
-  addTrip,
-  updateTrip,
-  deleteTrip,
-  findTripsByDriver,
+    getAllTrips,
+    addTrip,
+    updateTrip,
+    deleteTrip,
+    findTripsByDriver,
 };
