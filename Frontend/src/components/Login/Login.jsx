@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.css';
 import Navbar from '../Navbar/Navbar';
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    email: '', // Change the name to "email"
+    email: '',
     password: ''
   });
 
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -28,8 +28,11 @@ const Login = () => {
 
       if (response.ok) {
         const result = await response.json();
+        const token = result.token; // Assuming the JWT token is in the "token" field
+        localStorage.setItem('jwtToken', token); // Store token in local storage
         console.log('Login successful:', result);
-        navigate('/dashboard', { replace: true }); // Redirect to the dashboard page
+        console.log('Token-Content' , token )
+        navigate('/dashboard', { replace: true });
       } else {
         const errorData = await response.json();
         console.log('Login failed:', errorData);
@@ -41,37 +44,39 @@ const Login = () => {
 
   return (
     <>
-    <Navbar/>
-    <div className={styles.loginContainer}>
-      <header>Login</header>
-      <form onSubmit={handleSubmit}>
-        <div className={styles.inputField}>
-          <label>Email/Phone Number</label>
-          <input
-            type="text"
-            name="email" // Change the name to "email"
-            placeholder="Enter email or phone number"
-            value={formData.email} // Change this to "email"
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className={styles.inputField}>
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter your password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-        <button className={styles.forgotBtn}>Forgot Password?</button>
-        <button onClick={()=>navigate('/registration')} >Register ?</button>
-      </form>
-    </div>
+      <Navbar />
+      <div className={styles.loginContainer}>
+        <header>Login</header>
+        <form onSubmit={handleSubmit}>
+          <div className={styles.inputField}>
+            <label>Email/Phone Number</label>
+            <input
+              type="text"
+              name="email"
+              placeholder="Enter email or phone number"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className={styles.inputField}>
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <button type="submit">Login</button>
+          <button className={styles.forgotBtn}>Forgot Password?</button>
+          <button type="button" onClick={() => navigate('/registration')}>
+            Register?
+          </button>
+        </form>
+      </div>
     </>
   );
 };

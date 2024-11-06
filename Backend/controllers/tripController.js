@@ -14,18 +14,31 @@ const getAllTrips = async (req, res) => {
 // Add a new trip
 const addTrip = async (req, res) => {
     try {
-        const { driver_id, start_location, end_location } = req.body; // Destructure the required fields
+        // Extract driver_id from the JWT token (assuming you have middleware to decode the JWT and add driver_id to req)
+        const driver_id = req.user.driver_id; // req.user should have been populated by authentication middleware
+
+        // Destructure fields from req.body
+        const { start_location, end_location, start_time, end_time, distance_km, purpose } = req.body;
+
+        // Create a new trip record
         const trip = await Trip.create({
             driver_id,
             start_location,
             end_location,
-            // other fields...
+            start_time,
+            end_time,
+            distance_km,
+            purpose
         });
+
+        // Respond with the created trip
         res.status(201).json(trip);
     } catch (error) {
+        console.error('Error adding trip:', error);
         res.status(500).json({ message: 'Error adding trip', error });
     }
 };
+
 
 // Update a trip by ID
 const updateTrip = async (req, res) => {
@@ -63,7 +76,7 @@ const deleteTrip = async (req, res) => {
 // Find trips by driver ID (using JWT's driverId)
 const findTripsByDriver = async (req, res) => {
   try {
-    const driverId = req.user.id; // Access the driverId from the JWT payload (req.user.id is set by authMiddleware)
+    const driverId = req.user.driver_id; // Access the driverId from the JWT payload (req.user.id is set by authMiddleware)
     if (!driverId) {
       return res.status(400).json({ message: 'Driver ID not found in the token.' });
     }

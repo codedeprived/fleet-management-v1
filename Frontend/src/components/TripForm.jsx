@@ -3,7 +3,6 @@ import axios from 'axios';
 
 const TripForm = () => {
   const [formData, setFormData] = useState({
-    driver_id: '',
     start_location: '',
     end_location: '',
     start_time: '',
@@ -12,27 +11,66 @@ const TripForm = () => {
     purpose: ''
   });
   const [tripRecords, setTripRecords] = useState([]);
+  const [token, setToken] = useState(null);  // Track token explicitly
 
-  // Fetch trip records based on driver_id
-  const fetchTripRecords = async (driverId) => {
+  // Fetch trip records based on token
+  const fetchTripRecords = async () => {
+    if (!token) {
+      console.log('No token found');
+      alert('No token found. Please log in again.');
+      return;
+    }
+
     try {
-      const response = await axios.get(`http://localhost:5001/api/trip/driver/${driverId}`);
+      const response = await axios.get('http://localhost:5001/api/trip/driver', {
+        headers: {
+          'Authorization': `Bearer ${token}`,  // Attach the token to the Authorization header
+        }
+      });
       setTripRecords(response.data);
     } catch (error) {
       console.error('Error fetching trip records:', error);
-      // Optionally, handle error (e.g., show a message to the user)
+      alert('Failed to fetch trip records');
     }
   };
 
-  // Handle form submission
+  // On initial render, set token and fetch records
+  useEffect(() => {
+    const storedToken = localStorage.getItem('jwtToken');
+    if (storedToken) {
+      setToken(storedToken);  // Set token in state
+    } else {
+      console.log('No token in localStorage');
+      alert('Please log in again.');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (token) {
+      fetchTripRecords();  // Fetch trip records only if token exists
+    }
+  }, [token]);  // Run when token changes or is retrieved
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!token) {
+      alert('No token found. Please log in again.');
+      return;
+    }
+
     try {
-      await axios.post('http://localhost:5001/api/trip', formData);
+      await axios.post(
+        'http://localhost:5001/api/trip', 
+        formData, 
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`  // Attach the token to the Authorization header
+          }
+        }
+      );
       alert('Trip record submitted successfully');
-      // Clear form fields
       setFormData({
-        driver_id: '',
         start_location: '',
         end_location: '',
         start_time: '',
@@ -40,47 +78,25 @@ const TripForm = () => {
         distance_km: '',
         purpose: ''
       });
-      // Fetch updated trip records
-      fetchTripRecords(formData.driver_id);
+
+      // Fetch updated trip records after submitting the trip
+      fetchTripRecords();
     } catch (error) {
       console.error('Error submitting trip record:', error);
       alert('Failed to submit trip record');
     }
   };
 
-  // Fetch trip records when driver_id changes
-  useEffect(() => {
-    if (formData.driver_id) {
-      fetchTripRecords(formData.driver_id);
-    } else {
-      setTripRecords([]); // Clear trip records if driver_id is empty
-    }
-  }, [formData.driver_id]);
-
-  // Handle input changes
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
   };
-
   return (
     <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-lg space-y-6">
       {/* Trip Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Driver ID</label>
-          <input
-            type="number"
-            name="driver_id"
-            value={formData.driver_id}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-            required
-          />
-        </div>
-
         <div>
           <label className="block text-gray-700 font-medium mb-1">Start Location</label>
           <input

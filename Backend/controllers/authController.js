@@ -46,14 +46,14 @@ const login = async (req, res) => {
 
     // Generate JWT token with driver ID and email
     const token = jwt.sign(
-      { id: driver.driver_id, username: driver.username, email: driver.email },
+      { driver_id: driver.driver_id, username: driver.username, email: driver.email },
       process.env.JWT_SECRET,
       { expiresIn: '1h' } // Token expires in 1 hour
     );
 
     return res.status(200).json({
       message: 'Login successful!',
-      driver: { id: driver.id, username: driver.username, email: driver.email },
+      driver: { driver_id: driver.driver_id, username: driver.username, email: driver.email },
       token, // Send token in the response
     });
   } catch (error) {
