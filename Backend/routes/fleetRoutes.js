@@ -23,4 +23,7 @@ router.delete('/:id', deleteVehicleFromFleet);
 // Find a vehicle by chassis number
 router.get('/chassis/:chassis_number', findVehicleByChassisNumber);
 
+// get all vehicle associated by driver id 
+
+
 module.exports = router;

@@ -1,5 +1,8 @@
 const Driver = require('../models/Driver'); // Ensure correct import
 const bcrypt = require('bcrypt');
+const JWT = require('jsonwebtoken'); // Import JWT
+
+
 
 // Register function
 const register = async (req, res) => {
@@ -25,4 +28,39 @@ const register = async (req, res) => {
   }
 };
 
-module.exports = { register };
+
+// LOGIN
+const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const driver = await Driver.findOne({ where: { email } });
+    if (!driver) {
+      return res.status(404).json({ message: 'Driver not found' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, driver.password_hash);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    // Generate JWT token
+    const token = JWT.sign(
+      { id: driver.id, username: driver.username, email: driver.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' } // Token validity
+    );
+
+    return res.status(200).json({
+      message: 'Login successful!',
+      driver: { id: driver.id, username: driver.username, email: driver.email },
+      token, // Send the token in response
+    });
+  } catch (error) {
+    console.error('Error logging in driver:', error);
+    return res.status(500).json({ message: 'Error logging in driver', error: error.message });
+  }
+};
+
+
+module.exports = { register , login };

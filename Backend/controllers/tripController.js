@@ -24,11 +24,11 @@ const getAllTrips = async (req, res) => {
  * @returns {object} Created trip in JSON format or error message
  */
 const addTrip = async (req, res) => {
-  const { driver_id, start_location, end_location, start_time, end_time, distance_km, purpose } = req.body;
+  const {start_location, end_location, start_time, end_time, distance_km, purpose } = req.body;
 
   try {
     const newTrip = await Trip.create({
-      driver_id,
+      driver_id: req.body.userId,
       start_location,
       end_location,
       start_time,
@@ -104,7 +104,7 @@ const deleteTrip = async (req, res) => {
  * @returns {object} List of trips for the driver or error message
  */
 const findTripsByDriver = async (req, res) => {
-  const { driver_id } = req.params;
+  const driver_id = req.userId;  // Use driver ID from JWT token
 
   try {
     const trips = await Trip.findAll({ where: { driver_id } });

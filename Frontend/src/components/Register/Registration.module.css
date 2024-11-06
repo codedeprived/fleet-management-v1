@@ -8,7 +8,7 @@
     font-family: 'Poppins', sans-serif;
 }
 
-body {
+.registration {
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -27,14 +27,14 @@ body {
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
 }
 
-.container header {
+.header {
     font-size: 24px;
     font-weight: 600;
     color: #333;
     margin-bottom: 20px;
 }
 
-.container form {
+.form {
     margin-top: 16px;
 }
 
@@ -48,19 +48,19 @@ body {
     gap: 20px;
 }
 
-.input-field {
+.inputField {
     flex: 1;
     min-width: 200px; /* Ensures a minimum width */
 }
 
-.input-field label {
+.inputField label {
     font-size: 12px;
     font-weight: 500;
     color: #2e2e2e;
 }
 
-.input-field input,
-.input-field select {
+.inputField input,
+.inputField select {
     outline: none;
     font-size: 14px;
     font-weight: 400;
@@ -72,12 +72,12 @@ body {
     margin-top: 8px;
 }
 
-.input-field input:focus,
-.input-field select:focus {
+.inputField input:focus,
+.inputField select:focus {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.13);
 }
 
-.container form button.submit {
+.submit {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -94,7 +94,7 @@ body {
     cursor: pointer;
 }
 
-.container form button.submit:hover {
+.submit:hover {
     background-color: #265df2;
 }
 
@@ -105,7 +105,7 @@ body {
 }
 
 @media (max-width: 550px) {
-    .input-field {
+    .inputField {
         width: 100%;
     }
 }

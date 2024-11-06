@@ -8,7 +8,9 @@ const fleetRoutes = require('./routes/fleetRoutes');
 const adminRoutes = require('./routes/adminRoutes')
 const tripRoutes = require('./routes/tripRoutes')
 const maintenanceRoutes = require('./routes/maintenanceRoutes')
+const dotenv = require ('dotenv')
 
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -19,7 +21,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRoutes);  // auth routes
 app.use('/api/drivers', driverRoutes); // Add the driver routes 
 app.use('/api/fleet', fleetRoutes); // Add the fleet routes 
 app.use('/api/admin', adminRoutes); // Add the admiin routes 

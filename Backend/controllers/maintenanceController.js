@@ -115,10 +115,28 @@ const findMaintenanceRecordsByVehicle = async (req, res) => {
   }
 };
 
+
+const findMaintenanceRecordsByDriver = async (req, res) => {
+  const { driver_id } = req.params;
+
+  try {
+    const maintenanceRecords = await Maintenance.findAll({ where: { driver_id } });
+    if (!maintenanceRecords.length) {
+      return res.status(404).json({ message: 'No maintenance records found for this driver' });
+    }
+
+    res.json(maintenanceRecords);
+  } catch (error) {
+    res.status(500).json({ message: 'Error finding maintenance records', error });
+  }
+};
+
+
 module.exports = {
   getAllMaintenanceRecords,
   addMaintenanceRecord,
   updateMaintenanceRecord,
   deleteMaintenanceRecord,
   findMaintenanceRecordsByVehicle,
+  findMaintenanceRecordsByDriver
 };
