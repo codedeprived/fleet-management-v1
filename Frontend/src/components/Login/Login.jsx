@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.css';
+import { useAuth } from '../../context/AuthContext';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
+  const {login} = useAuth();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,6 +31,7 @@ const Login = () => {
         const result = await response.json();
         const token = result.token; // Assuming the JWT token is in the "token" field
         localStorage.setItem('jwtToken', token); // Store token in local storage
+        login();                                //  Update isAuthenticated to true
         console.log('Login successful:', result);
         console.log('Token-Content' , token )
         navigate('/dashboard', { replace: true });

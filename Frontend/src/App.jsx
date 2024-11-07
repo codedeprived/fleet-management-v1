@@ -6,19 +6,45 @@ import Registration from "./components/Register/Registration.jsx";
 import DriverDashboard from "./pages/DriverDashboard/DriverDashboard.jsx";
 import TripForm from "./components/TripForm.jsx";
 import MaintenanceForm from "./components/MaintenanceForm.jsx";
+import LandingPage from "./pages/LandingPage/LandingPage.jsx";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/registration" element={<Registration />} />
-        <Route path="/dashboard" element={<DriverDashboard />} />
-        <Route path="/trip" element={<TripForm />} />
-        <Route path="/maintenance" element={<MaintenanceForm />} />
-      </Routes>
-    </Router>
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/registration" element={<Registration />} />
+
+      {/* Protected Routes */}
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <DriverDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/trip"
+        element={
+          <ProtectedRoute>
+            <TripForm />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/maintenance"
+        element={
+          <ProtectedRoute>
+            <MaintenanceForm />
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
+  </Router>
   );
 }
 

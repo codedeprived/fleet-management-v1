@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuth(); // Destructure logout and isAuthenticated
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
   const handleLogout = () => {
-    // Remove JWT token from localStorage
-    localStorage.removeItem('jwtToken');
-    
-    // Redirect to the login page
-    navigate('/login');
+    localStorage.removeItem('jwtToken'); // Remove token from local storage
+    logout(); // Update isAuthenticated to false
+    navigate('/'); // Redirect to landing page
   };
 
   return (
@@ -45,78 +46,119 @@ const Navbar = () => {
 
         {/* Links for Desktop */}
         <ul className="hidden md:flex space-x-4">
-          <li>
-            <Link to="/dashboard" className="hover:text-blue-200 transition">
-              Dashboard
-            </Link>
-          </li>
-          <li>
-            <Link to="/trip" className="hover:text-blue-200 transition">
-              Trip
-            </Link>
-          </li>
-          <li>
-            <Link to="/maintenance" className="hover:text-blue-200 transition">
-              Maintenance
-            </Link>
-          </li>
-          {/* Logout Link */}
-          <li>
-            <Link
-              to="/login"
-              className="hover:text-blue-200 transition"
-              onClick={handleLogout} // Logout action
-            >
-              Logout
-            </Link>
-          </li>
+          {isAuthenticated ? (
+            <>
+              <li>
+                <Link to="/dashboard" className="hover:text-blue-200 transition">
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link to="/trip" className="hover:text-blue-200 transition">
+                  Trip
+                </Link>
+              </li>
+              <li>
+                <Link to="/maintenance" className="hover:text-blue-200 transition">
+                  Maintenance
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="#"
+                  className="hover:text-blue-200 transition"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Link>
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <Link to="/login" className="hover:text-blue-200 transition">
+                  Login
+                </Link>
+              </li>
+              <li>
+                <Link to="/registration" className="hover:text-blue-200 transition">
+                  Register
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
       </div>
 
       {/* Dropdown Links for Mobile */}
       {isOpen && (
         <ul className="md:hidden mt-2 space-y-2 text-center bg-blue-700 p-4 rounded-lg">
-          <li>
-            <Link
-              to="/dashboard"
-              className="block text-white hover:text-blue-300 transition"
-              onClick={toggleMenu}  // Close menu on link click
-            >
-              Dashboard
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/trip"
-              className="block text-white hover:text-blue-300 transition"
-              onClick={toggleMenu}
-            >
-              Trip
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/maintenance"
-              className="block text-white hover:text-blue-300 transition"
-              onClick={toggleMenu}
-            >
-              Maintenance
-            </Link>
-          </li>
-          {/* Logout Link for Mobile */}
-          <li>
-            <Link
-              to="/login"
-              className="block text-white hover:text-blue-300 transition"
-              onClick={handleLogout}
-            >
-              Logout
-            </Link>
-          </li>
+          {isAuthenticated ? (
+            <>
+              <li>
+                <Link
+                  to="/dashboard"
+                  className="block text-white hover:text-blue-300 transition"
+                  onClick={toggleMenu}
+                >
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/trip"
+                  className="block text-white hover:text-blue-300 transition"
+                  onClick={toggleMenu}
+                >
+                  Trip
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/maintenance"
+                  className="block text-white hover:text-blue-300 transition"
+                  onClick={toggleMenu}
+                >
+                  Maintenance
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="#"
+                  className="block text-white hover:text-blue-300 transition"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Link>
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <Link
+                  to="/login"
+                  className="block text-white hover:text-blue-300 transition"
+                  onClick={toggleMenu}
+                >
+                  Login
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/registration"
+                  className="block text-white hover:text-blue-300 transition"
+                  onClick={toggleMenu}
+                >
+                  Register
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
       )}
     </nav>
   );
 };
+
 
 export default Navbar;
