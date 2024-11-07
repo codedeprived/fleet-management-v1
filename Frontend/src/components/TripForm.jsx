@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Navbar from './Navbar/Navbar';
 import axios from 'axios';
 
 const TripForm = () => {
@@ -94,6 +95,8 @@ const TripForm = () => {
     });
   };
   return (
+    <>
+    <Navbar />
     <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-lg space-y-6">
       {/* Trip Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -211,6 +214,7 @@ const TripForm = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

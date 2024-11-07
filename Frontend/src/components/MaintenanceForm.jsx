@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Navbar from './Navbar/Navbar';
 import axios from 'axios';
 
 const MaintenanceForm = () => {
@@ -57,6 +58,8 @@ const MaintenanceForm = () => {
   };
 
   return (
+    <>
+    <Navbar/>
     <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-lg space-y-4">
       {/* Maintenance Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -156,6 +159,7 @@ const MaintenanceForm = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

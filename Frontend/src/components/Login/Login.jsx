@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.css';
-import Navbar from '../Navbar/Navbar';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -44,7 +43,6 @@ const Login = () => {
 
   return (
     <>
-      <Navbar />
       <div className={styles.loginContainer}>
         <header>Login</header>
         <form onSubmit={handleSubmit}>
