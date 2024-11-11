@@ -75,26 +75,26 @@ const deleteTrip = async (req, res) => {
 
 // Find trips by driver ID (using JWT's driverId)
 const findTripsByDriver = async (req, res) => {
-  try {
-    const driverId = req.user.driver_id; // Access the driverId from the JWT payload (req.user.id is set by authMiddleware)
-    if (!driverId) {
-      return res.status(400).json({ message: 'Driver ID not found in the token.' });
+    try {
+        const driverId = req.user.driver_id; // Access the driverId from the JWT payload (req.user.id is set by authMiddleware)
+        if (!driverId) {
+            return res.status(400).json({ message: 'Driver ID not found in the token.' });
+        }
+
+        // Assuming you have the driver_id field in the trips table
+        const trips = await Trip.findAll({
+            where: { driver_id: driverId },
+        });
+
+        if (!trips || trips.length === 0) {
+            return res.status(404).json({ message: 'No trips found for this driver.' });
+        }
+
+        res.status(200).json(trips); // Return the trips for the logged-in driver
+    } catch (error) {
+        console.error('Error retrieving trips by driver:', error);
+        res.status(500).json({ message: 'Error retrieving trips by driver', error: error.message });
     }
-
-    // Assuming you have the driver_id field in the trips table
-    const trips = await Trip.findAll({
-      where: { driver_id: driverId },
-    });
-
-    if (!trips || trips.length === 0) {
-      return res.status(404).json({ message: 'No trips found for this driver.' });
-    }
-
-    res.status(200).json(trips); // Return the trips for the logged-in driver
-  } catch (error) {
-    console.error('Error retrieving trips by driver:', error);
-    res.status(500).json({ message: 'Error retrieving trips by driver', error: error.message });
-  }
 };
 
 

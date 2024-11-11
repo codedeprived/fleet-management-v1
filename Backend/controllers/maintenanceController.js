@@ -24,9 +24,12 @@ const getAllMaintenanceRecords = async (req, res) => {
  * @returns {object} Created maintenance record in JSON format or error message
  */
 const addMaintenanceRecord = async (req, res) => {
-  const { vehicle_id, driver_id, maintenance_date, description, cost } = req.body;
-
+  
   try {
+       // Extract driver_id from the JWT token (assuming you have middleware to decode the JWT and add driver_id to req)
+       const driver_id = req.user.driver_id; // req.user should have been populated by authentication middleware
+
+    const { vehicle_id, maintenance_date, description, cost } = req.body;
     const newMaintenanceRecord = await Maintenance.create({
       vehicle_id,
       driver_id,
@@ -115,19 +118,34 @@ const findMaintenanceRecordsByVehicle = async (req, res) => {
   }
 };
 
-
+// Find Maintenance by driver ID (using JWT's driverId)
 const findMaintenanceRecordsByDriver = async (req, res) => {
-  const { driver_id } = req.params;
-
   try {
-    const maintenanceRecords = await Maintenance.findAll({ where: { driver_id } });
-    if (!maintenanceRecords.length) {
+    const driverId = req.user.driver_id; // Access the driverId from the JWT payload (req.user.id is set by authMiddleware)
+    if (!driverId) {
+      return res.status(400).send({
+        success: false,
+        message: "Driver Id not found in the token. "
+      })
+    }
+
+
+    const maintenanceRecords = await Maintenance.findAll({
+      where: { driver_id: driverId }
+    });
+    if (!maintenanceRecords || maintenanceRecords.length === 0) {
       return res.status(404).json({ message: 'No maintenance records found for this driver' });
     }
 
-    res.json(maintenanceRecords);
+    res.status(200).json(maintenanceRecords);
   } catch (error) {
-    res.status(500).json({ message: 'Error finding maintenance records', error });
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: 'Error finding maintenance records',
+      error: error.message
+    });
   }
 };
 
