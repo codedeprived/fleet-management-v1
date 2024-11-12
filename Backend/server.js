@@ -1,5 +1,3 @@
-// main server file (e.g., app.js or server.js)
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -14,10 +12,9 @@ require('dotenv').config(); // Load environment variables
 
 const app = express();
 const PORT = process.env.PORT || 5001;
-const frontendUrl = process.env.FRONTEND_URL || 'https://fleet-management-v1-8l18r7dw0-codedepriveds-projects.vercel.app';
-app.use(cors({
-  origin: frontendUrl,
-}));
+
+// Disable CORS or allow all origins
+app.use(cors());  // This will allow all origins
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
