@@ -15,7 +15,7 @@ function LandingPage() {
   
         {/* Frosted Glass Content */}
         <div className="relative z-10 text-center text-white bg-white bg-opacity-10 backdrop-blur-lg p-8 rounded-xl shadow-2xl border border-white border-opacity-30 font-roboto ">
-          <h1 className="text-4xl font-bold mb-4">Welcome to Our Fleet Management System</h1>
+          <h1 className="text-4xl font-bold mb-4">Welcome to Our Perfect Fleet Management System</h1>
           <p className="text-xl mb-8">Efficiently manage your fleet with ease.</p>
           
           {/* Buttons */}
