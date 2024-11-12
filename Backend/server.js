@@ -14,9 +14,11 @@ require('dotenv').config(); // Load environment variables
 
 const app = express();
 const PORT = process.env.PORT || 5001;
+const frontendUrl = process.env.FRONTEND_URL || 'https://fleet-management-v1-8l18r7dw0-codedepriveds-projects.vercel.app';
+app.use(cors({
+  origin: frontendUrl,
+}));
 
-// Middleware
-app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173' })); // Allow requests from Vercel frontend
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
