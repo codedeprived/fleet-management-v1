@@ -36,7 +36,7 @@ const Registration = () => {
     const apiUrl = process.env.REACT_APP_API_URL; // Use dynamic API URL from environment variable
 
     try {
-      const response = await fetch(`${apiUrl}/api/auth/register`, {
+      const response = await fetch('https://fleet-management-v1.onrender.com/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
