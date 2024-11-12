@@ -1,4 +1,6 @@
-require('dotenv').config(); // Load environment variables
+// config/db.js
+
+require('dotenv').config(); // Load environment variables at the top
 
 const { Sequelize } = require('sequelize');
 
