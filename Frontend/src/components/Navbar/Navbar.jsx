@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
-
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
@@ -21,7 +20,24 @@ const Navbar = () => {
   return (
     <nav className="bg-blue-600 p-4 shadow-md text-white">
       <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-lg font-semibold">Fleet Manager</h1>
+        <div className="flex items-center">
+          {/* Icon */}
+          <svg
+            className="w-8 h-8 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M4 6h16M4 12h16m-7 6h7"
+            ></path>
+          </svg>
+          <h1 className="text-lg font-semibold">Perfect Fleet</h1>
+        </div>
         
         {/* Hamburger Icon for Small Screens */}
         <button
@@ -159,6 +175,5 @@ const Navbar = () => {
     </nav>
   );
 };
-
 
 export default Navbar;
