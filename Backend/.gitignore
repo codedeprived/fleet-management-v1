@@ -15,8 +15,5 @@ logs/*.log
 # MacOS
 .DS_Store
 
-# Database configuration file
-db.js
-
 # Optional, if using PostgreSQL or other DBs
 pg_data/
