@@ -2,17 +2,11 @@ require('dotenv').config(); // Load environment variables
 
 const { Sequelize } = require('sequelize');
 
-// Create a new Sequelize instance using environment variables
-const sequelize = new Sequelize(
-  process.env.DB_NAME,       // Database name
-  process.env.DB_USER,       // Username
-  process.env.DB_PASSWORD,   // Password
-  {
-    host: process.env.DB_HOST,  // Database host
-    dialect: 'postgres',        // Specify PostgreSQL as the dialect
-    logging: false,             // Set to console.log to see SQL queries
-  }
-);
+// Create a new Sequelize instance using DB_URL from environment variables
+const sequelize = new Sequelize(process.env.DB_URL, {
+  dialect: 'postgres',    // Specify PostgreSQL as the dialect
+  logging: false,         // Set to console.log to see SQL queries if needed
+});
 
 // Function to authenticate the database connection
 const authenticateDatabase = async () => {
