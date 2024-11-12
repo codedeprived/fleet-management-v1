@@ -23,7 +23,7 @@ const TripForm = () => {
     }
 
     try {
-      const response = await axios.get('http://localhost:5001/api/trip/driver', {
+      const response = await axios.get('https://fleet-management-v1.onrender.com/api/trip/driver', {
         headers: {
           'Authorization': `Bearer ${token}`,  // Attach the token to the Authorization header
         }
@@ -62,7 +62,7 @@ const TripForm = () => {
 
     try {
       await axios.post(
-        'http://localhost:5001/api/trip', 
+        'https://fleet-management-v1.onrender.com/api/trip', 
         formData, 
         {
           headers: {

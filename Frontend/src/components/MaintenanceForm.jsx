@@ -21,7 +21,7 @@ const fetchMaintenanceRecords = async () => {
     return;
   }
   try {
-    const response = await axios.get('http://localhost:5001/api/maintenance/driver', {
+    const response = await axios.get('https://fleet-management-v1.onrender.com/api/maintenance/driver', {
       headers: {
         'Authorization': `Bearer ${token}`,  // Attach the token to the Authorization header
       }
@@ -59,7 +59,7 @@ const fetchMaintenanceRecords = async () => {
     }
     try {
       await axios.post(
-        'http://localhost:5001/api/maintenance',
+        'https://fleet-management-v1.onrender.com/api/maintenance',
         formData, {
         headers: {
           'Authorization': `Bearer ${token}`  // Attach the token to the Authorization header
