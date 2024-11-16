@@ -1,4 +1,5 @@
 const Driver = require('../models/Driver'); // Ensure correct import
+const Admin = require('../models/Admin');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken'); // Import JWT
 
@@ -30,7 +31,7 @@ const register = async (req, res) => {
 
 
 // LOGIN
-const login = async (req, res) => {
+const driverLogin  = async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -46,14 +47,14 @@ const login = async (req, res) => {
 
     // Generate JWT token with driver ID and email
     const token = jwt.sign(
-      { driver_id: driver.driver_id, username: driver.username, email: driver.email },
+      { driver_id: driver.driver_id, username: driver.username, email: driver.email, role:'driver' }, // Generate JWT with role set to 'driver'
       process.env.JWT_SECRET,
       { expiresIn: '1h' } // Token expires in 1 hour
     );
 
     return res.status(200).json({
       message: 'Login successful!',
-      driver: { driver_id: driver.driver_id, username: driver.username, email: driver.email },
+      driver: { driver_id: driver.driver_id, username: driver.username, email: driver.email , role:'driver'},
       token, // Send token in the response
     });
   } catch (error) {
@@ -63,4 +64,38 @@ const login = async (req, res) => {
 };
 
 
-module.exports = { register , login };
+
+// Login for Admin
+const adminLogin = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const admin = await Admin.findOne({ where: { email } });
+    if (!admin) {
+      return res.status(404).json({ message: 'Admin not found' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, admin.password_hash);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    // Generate JWT with role set to 'admin'
+    const token = jwt.sign(
+      { userId: admin.admin_id, username: admin.username, role: 'admin' },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    return res.status(200).json({
+      message: 'Admin login successful!',
+      user: { userId: admin.admin_id, username: admin.username, role: 'admin' },
+      token,
+    });
+  } catch (error) {
+    console.error('Error logging in admin:', error);
+    return res.status(500).json({ message: 'Error logging in admin', error: error.message });
+  }
+};
+
+module.exports = { register , driverLogin , adminLogin };
