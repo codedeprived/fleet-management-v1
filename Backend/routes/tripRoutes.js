@@ -4,7 +4,7 @@ const authMiddleware = require('../middleware/auth.js');  // Import your JWT aut
 const { getAllTrips, addTrip, updateTrip, deleteTrip, findTripsByDriver } = require('../controllers/tripController');
 
 // Route to get all trips
-router.get('/',authMiddleware, getAllTrips);
+router.get('/', getAllTrips);
 
 // Route to add a new trip
 router.post('/', authMiddleware,addTrip);

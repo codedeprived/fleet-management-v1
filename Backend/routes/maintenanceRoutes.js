@@ -11,7 +11,7 @@ const {
 const authMiddleware = require('../middleware/auth');
 
 // Route to get all maintenance records
-router.get('/', authMiddleware , getAllMaintenanceRecords);
+router.get('/' , getAllMaintenanceRecords);
 
 // Route to add a new maintenance record
 router.post('/', authMiddleware , addMaintenanceRecord);

@@ -32,6 +32,8 @@ export const registerUser = async (data) => {
 };
 
 // DRIVERS
+// export const getDrivers = () => axios.get(`${API_BASE_URL}/drivers`);
+
 export const getDrivers = async () => {
     try {
         return await api.get('/drivers');
@@ -88,6 +90,7 @@ export const findDriverByUsername = async (username) => {
 };
 
 // FLEET
+// export const getFleet = () => axios.get(`${API_BASE_URL}/fleet`);
 export const getFleet = async () => {
     try {
         return await api.get('/fleet');
@@ -129,6 +132,8 @@ export const findFleetByChassis = async (chassisNumber) => {
 };
 
 // MAINTENANCE
+// export const getMaintenanceRecords = () => axios.get(`${API_BASE_URL}/maintenance`);
+
 export const getMaintenanceRecords = async () => {
     try {
         return await api.get('/maintenance');
@@ -170,6 +175,8 @@ export const findMaintenanceByVehicleId = async (vehicleId) => {
 };
 
 // TRIPS
+// export const getTrips = () => axios.get(`${API_BASE_URL}/trip`);
+
 export const getTrips = async () => {
     try {
         return await api.get('/trip');
