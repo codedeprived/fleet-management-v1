@@ -31,7 +31,7 @@ const register = async (req, res) => {
 
 
 // LOGIN
-const driverLogin  = async (req, res) => {
+const login  = async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -47,14 +47,14 @@ const driverLogin  = async (req, res) => {
 
     // Generate JWT token with driver ID and email
     const token = jwt.sign(
-      { driver_id: driver.driver_id, username: driver.username, email: driver.email, role:'driver' }, // Generate JWT with role set to 'driver'
+      { driver_id: driver.driver_id, username: driver.username, email: driver.email}, // Generate JWT with role set to 'driver'
       process.env.JWT_SECRET,
       { expiresIn: '1h' } // Token expires in 1 hour
     );
 
     return res.status(200).json({
       message: 'Login successful!',
-      driver: { driver_id: driver.driver_id, username: driver.username, email: driver.email , role:'driver'},
+      driver: { driver_id: driver.driver_id, username: driver.username, email: driver.email},
       token, // Send token in the response
     });
   } catch (error) {
@@ -82,14 +82,14 @@ const adminLogin = async (req, res) => {
 
     // Generate JWT with role set to 'admin'
     const token = jwt.sign(
-      { userId: admin.admin_id, username: admin.username, role: 'admin' },
+      { userId: admin.admin_id, username: admin.username},
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
 
     return res.status(200).json({
       message: 'Admin login successful!',
-      user: { userId: admin.admin_id, username: admin.username, role: 'admin' },
+      user: { userId: admin.admin_id, username: admin.username},
       token,
     });
   } catch (error) {
@@ -98,4 +98,4 @@ const adminLogin = async (req, res) => {
   }
 };
 
-module.exports = { register , driverLogin , adminLogin };
+module.exports = { register , login , adminLogin };
