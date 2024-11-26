@@ -91,7 +91,25 @@ const deleteDriver = async (req, res) => {
     res.status(500).json({ success:false ,  message: 'Error deleting driver', error: error.message }); // Return 500 status code with error message
   }
 };
+/**
+ * Get a driver by ID
+ * @route GET /api/drivers/:id
+ */
+const getDriverById = async (req, res) => {
+  const { id } = req.params; // Extract driver ID from request params
 
+  try {
+    const driver = await Driver.findByPk(id); // Find driver by primary key (ID)
+    if (!driver) {
+      return res.status(404).json({ message: 'Driver not found' }); // Return 404 if driver doesn't exist
+    }
+
+    res.json(driver); // Return the found driver as JSON
+  } catch (error) {
+    console.error('Error fetching driver:', error); // Log the error for debugging purposes
+    res.status(500).json({ message: 'Error fetching driver', error: error.message }); // Return 500 status code with error message
+  }
+};
 /**
  * Find a driver by username
  * @route GET /api/drivers/username/:username
@@ -113,6 +131,7 @@ const findDriverByUsername = async (req, res) => {
 };
 
 module.exports = {
+  getDriverById,
   getAllDrivers,
   addDriver,
   updateDriver,

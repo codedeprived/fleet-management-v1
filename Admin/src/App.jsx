@@ -1,22 +1,26 @@
 import "./App.css";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
-import AdminDashboard from "./components/AdminDashboard"; // Import dashboard component
+import AdminDashboard from "./components/AdminDashboard";
 import { useState, useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom"; // Import Routes and Route
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import DriverPage from "./components/pages/DriverPage"; // Import DriverPage
+import FleetPage from "./components/pages/FleetPage"; // Import DriverPage
+import SearchDriver from "./components/pages/DriverComponents/SearchDriver"; // Import SearchDriver
+import AddNewFleet from "./components/pages/FleetComponents/AddFleet";
 import DrivesTable from "./components/Tables/DrivesTable";
-import TableCard from "./components/Tables/TableCard";
-import FleetTable from "./components/Tables/FleetTable"; // Import FleetTable
-import TripsTable from "./components/Tables/TripsTable"; // Import TripsTable
-import MaintenanceTable from "./components/Tables/MaintenanceTable"; // Import MaintenanceTable
+import TripsTable from "./components/Tables/TripsTable";
+import MaintenanceTable from "./components/Tables/MaintenanceTable";
+import FleetTable from "./components/Tables/FleetTable";
 
 const App = () => {
-  const [isOpen, setIsOpen] = useState(false); // Dropdown menu state
-  const [isDarkMode, setIsDarkMode] = useState(false); // Dark mode state
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
+  const [isDarkMode, setIsDarkMode] = useState(false); // Dark mode toggle state
+  const location = useLocation(); // Get the current route
 
   // Toggle dark mode and update body class
   const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
+    setIsDarkMode((prevMode) => !prevMode);
   };
 
   // Set the initial theme based on localStorage
@@ -41,32 +45,35 @@ const App = () => {
     }
   }, [isDarkMode]);
 
-
   return (
     <>
       <Navbar
         isDarkMode={isDarkMode}
         toggleDarkMode={toggleDarkMode}
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
+        isOpen={isSidebarOpen}
+        setIsOpen={setIsSidebarOpen}
       />
-      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
+      <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
       <div className="flex flex-1 pt-16">
         <div
-          className={`flex-1 ${isOpen ? "pl-64" : "pl-0"
-            } md:pl-64 p-6 overflow-y-auto`}
+          className={`flex-1 ${
+            isSidebarOpen ? "pl-64" : "pl-0"
+          } md:pl-64 p-6 overflow-y-auto`}
         >
           <main>
             <Routes>
               <Route path="/dashboard" element={<AdminDashboard />} />
-              <Route path="/drivers" element={<DrivesTable />} />
-              <Route path="/fleet" element={<FleetTable />} />
+              <Route path="/drivers" element={<DriverPage />} />
+              <Route path="/driver/show" element={<DrivesTable />} />
+              <Route path="/driver/search" element={<SearchDriver />} />
+              <Route path="/fleet" element={<FleetPage />} />
+              <Route path="/fleet/add" element={<AddNewFleet/>} />
+              <Route path="/fleet/show" element={<FleetTable />} />
               <Route path="/trips" element={<TripsTable />} />
               <Route path="/maintenance" element={<MaintenanceTable />} />
               <Route path="*" element={<Navigate to="/dashboard" />} />
             </Routes>
           </main>
-          <TableCard />
         </div>
       </div>
     </>

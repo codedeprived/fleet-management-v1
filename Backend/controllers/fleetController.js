@@ -19,12 +19,11 @@ const getAllFleet = async (req, res) => {
  * @route POST /api/fleet
  */
 const addVehicleToFleet = async (req, res) => {
-  const { driver_id, vehicle_type, chassis_number, kilometers_driven } = req.body; // Removed organization_id
+  const { vehicle_type, chassis_number, kilometers_driven } = req.body; // Removed organization_id
 
   try {
     // Create a new fleet vehicle entry in the database
     const newVehicle = await Fleet.create({
-      driver_id,
       vehicle_type,
       chassis_number,
       kilometers_driven

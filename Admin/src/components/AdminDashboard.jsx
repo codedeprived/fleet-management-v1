@@ -1,41 +1,56 @@
 import React from "react";
-import AnalyticsCard from "./AnalyticsCard";
 import { useNavigate } from "react-router-dom";
-import useFetchAnalytics from "../hooks/useFetchAnalytics"; // Import custom hook
+import { FaUsers, FaTruck, FaRoute, FaWrench } from "react-icons/fa"; // Icons from react-icons
+import useFetchAnalytics from "../hooks/useFetchAnalytics"; // Custom hook for fetching analytics data
+import AnalyticsCard from "./AnalyticsCard"; // Import the AnalyticsCard component
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const { analytics, loading, error } = useFetchAnalytics(); // Use custom hook
+  const { analytics, loading, error } = useFetchAnalytics(); // Using the custom hook for real-time analytics data
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-6">
-      <AnalyticsCard
-        title="Drivers"
-        count={analytics.drivers}
-        onClick={() => navigate("/drivers")}
-        icon="🚗"
-      />
-      <AnalyticsCard
-        title="Fleet"
-        count={analytics.fleet}
-        onClick={() => navigate("/fleet")}
-        icon="🚙"
-      />
-      <AnalyticsCard
-        title="Trips"
-        count={analytics.trips}
-        onClick={() => navigate("/trips")}
-        icon="📍"
-      />
-      <AnalyticsCard
-        title="Maintenance"
-        count={analytics.maintenance}
-        onClick={() => navigate("/maintenance")}
-        icon="🔧"
-      />
+    <div className="p-6">
+      <h1 className="text-3xl font-bold text-center mb-8 text-indigo-600">Admin Dashboard</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {/* Drivers Analytics Card */}
+        <AnalyticsCard
+          title="Drivers"
+          count={analytics.drivers}
+          onClick={() => navigate("/drivers")}
+          icon={<FaUsers className="text-4xl text-teal-600" />} 
+          cardClass="bg-gradient-to-r from-teal-500 to-green-600"
+        />
+
+        {/* Fleet Analytics Card */}
+        <AnalyticsCard
+          title="Fleet"
+          count={analytics.fleet}
+          onClick={() => navigate("/fleet")}
+          icon={<FaTruck className="text-4xl text-blue-600" />} 
+          cardClass="bg-gradient-to-r from-blue-500 to-indigo-600"
+        />
+
+        {/* Trips Analytics Card */}
+        <AnalyticsCard
+          title="Trips"
+          count={analytics.trips}
+          onClick={() => navigate("/trips")}
+          icon={<FaRoute className="text-4xl text-yellow-600" />} 
+          cardClass="bg-gradient-to-r from-yellow-500 to-orange-600"
+        />
+
+        {/* Maintenance Analytics Card */}
+        <AnalyticsCard
+          title="Maintenance"
+          count={analytics.maintenance}
+          onClick={() => navigate("/maintenance")}
+          icon={<FaWrench className="text-4xl text-purple-600" />} 
+          cardClass="bg-gradient-to-r from-purple-500 to-pink-600"
+        />
+      </div>
     </div>
   );
 };

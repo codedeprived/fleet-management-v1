@@ -101,6 +101,7 @@ export const getFleet = async () => {
 
 export const addFleetVehicle = async (data) => {
     try {
+        console.log(data);
         return await api.post('/fleet', data);
     } catch (error) {
         throw new Error(error.response ? error.response.data.message : error.message);

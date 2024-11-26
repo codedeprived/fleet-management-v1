@@ -11,6 +11,8 @@ router.post('/', driverController.addDriver);
 // Route to update a driver by ID Route = http://localhost:5001/api/drivers/id
 router.put('/:id', driverController.updateDriver);
 
+router.get('/:id', driverController.getDriverById);
+
 // Route to delete a driver by ID Route = http://localhost:5001/api/drivers/id
 router.delete('/:id', driverController.deleteDriver);
 
