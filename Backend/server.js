@@ -16,7 +16,10 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 // Middleware
-app.use(cors({ origin: 'http://localhost:5173' })); // Add this line to allow requests from your frontend
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://localhost:5174'] // Add this line to allow requests from your frontend
+}));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
