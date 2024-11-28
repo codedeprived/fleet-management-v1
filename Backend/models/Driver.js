@@ -21,7 +21,10 @@ const Driver = sequelize.define('Driver', {
   email: {
     type: DataTypes.STRING,
     unique: true,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      isEmail: true, // Ensures it's a valid email format
+    },
   },
   license_number: {
     type: DataTypes.STRING,

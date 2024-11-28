@@ -1,13 +1,18 @@
 // routes/auth.js
 const express = require('express');
-const { register  ,login} = require('../controllers/authController');
+const { driverRegister ,adminRegister ,driverLogin, adminLogin} = require('../controllers/authController');
 
 const router = express.Router();
  
-// Registration route
-router.post('/register', register);
+// Registration route for driver 
+router.post('/driver/register', driverRegister);
+// Registration route admin
+router.post('/admin/register', adminRegister);
 
-// Post request for login 
-router.post('/login',login)
+
+// Post request for driver login 
+router.post('/driver/login',driverLogin)
+// Post request for admin login 
+router.post('/admin/login',adminLogin)
 
 module.exports = router;

@@ -26,7 +26,7 @@ const Registration = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5001/api/auth/register', {
+      const response = await fetch('http://localhost:5001/api/auth/driver/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

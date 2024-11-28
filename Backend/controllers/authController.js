@@ -5,8 +5,8 @@ const jwt = require('jsonwebtoken'); // Import JWT
 
 
 
-// Register function
-const register = async (req, res) => {
+// Register function for driver 
+const driverRegister = async (req, res) => {
   const { username, email, phone_number, license_number, password } = req.body; // Removed organization_id
   try {
     // Hash the password
@@ -30,8 +30,54 @@ const register = async (req, res) => {
 };
 
 
-// LOGIN
-const login  = async (req, res) => {
+//  REGISTER FOR ADMIN
+const adminRegister = async (req, res) => {
+  const { username, email, password } = req.body;
+
+  try {
+    // Validate required fields
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: 'All fields are required.' });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    // Create the new admin
+    const newAdmin = await Admin.create({
+      username,
+      email,
+      password_hash: hashedPassword,
+    });
+
+    // Remove sensitive information before sending the response
+    const { password_hash, ...adminData } = newAdmin.toJSON();
+
+    // Send success response
+    return res.status(201).json({
+      message: 'Admin registration successful!',
+      admin: adminData, // Exclude sensitive fields
+    });
+  } catch (error) {
+    console.error('Error registering admin:', error);
+
+    // Handle unique constraint errors (e.g., duplicate email or username)
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      return res
+        .status(400)
+        .json({ message: 'Username or email already exists.', error: error.errors[0].message });
+    }
+
+    // General error handler
+    return res.status(500).json({
+      message: 'An error occurred while registering the admin.',
+      error: error.message,
+    });
+  }
+};
+
+// LOGIN FOR DRIVER 
+const driverLogin  = async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -65,7 +111,7 @@ const login  = async (req, res) => {
 
 
 
-// Login for Admin
+// Login FOR ADMIN
 const adminLogin = async (req, res) => {
   const { email, password } = req.body;
 
@@ -82,14 +128,14 @@ const adminLogin = async (req, res) => {
 
     // Generate JWT with role set to 'admin'
     const token = jwt.sign(
-      { userId: admin.admin_id, username: admin.username},
+      { userId: admin.admin_id, username: admin.username ,email: admin.email},
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
 
     return res.status(200).json({
       message: 'Admin login successful!',
-      user: { userId: admin.admin_id, username: admin.username},
+      user: { userId: admin.admin_id, username: admin.username , email: admin.email},
       token,
     });
   } catch (error) {
@@ -98,4 +144,4 @@ const adminLogin = async (req, res) => {
   }
 };
 
-module.exports = { register , login , adminLogin };
+module.exports = { driverRegister , driverLogin , adminLogin , adminRegister };
