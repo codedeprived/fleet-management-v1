@@ -36,9 +36,6 @@ const TripsTable = () => {
             <th className="px-6 py-3">End Location</th>
             <th className="px-6 py-3">Distance (km)</th>
             <th className="px-6 py-3">Purpose</th>
-            <th scope="col" className="px-6 py-3">
-              <span className="sr-only">Edit</span>
-            </th>
           </tr>
         </thead>
         <tbody>
@@ -50,14 +47,6 @@ const TripsTable = () => {
               <td className="px-6 py-4">{trip.end_location}</td>
               <td className="px-6 py-4">{trip.distance_km}</td>
               <td className="px-6 py-4">{trip.purpose}</td>
-              <td className="px-6 py-4 text-right">
-                <a
-                  href="#"
-                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                >
-                  Edit
-                </a>
-              </td>
             </tr>
           ))}
         </tbody>
