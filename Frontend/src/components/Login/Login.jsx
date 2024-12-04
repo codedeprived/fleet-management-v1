@@ -34,7 +34,7 @@ const Login = () => {
         const result = await response.json();
         const token = result.token; // Assuming the JWT token is in the "token" field
         localStorage.setItem('jwtToken', token); // Store token in local storage
-        login(); // Update isAuthenticated to true
+        login(token); // Update isAuthenticated to true
         toast.success('Login successful! Redirecting...', {
           position: 'top-center',
           autoClose: 2000,
@@ -48,7 +48,8 @@ const Login = () => {
           position: 'top-center',
         });
       }
-    } catch (error) {
+    }catch (error) {
+      console.error('Login error:', error);
       toast.error('An error occurred. Please try again.', {
         position: 'top-center',
       });
