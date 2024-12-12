@@ -116,6 +116,15 @@ export const updateFleetVehicle = async (id, data) => {
     }
 };
 
+export const assignDriverToFleet = async (fleetId, driverId) => {
+    try {
+      const response = await axios.post('/api/fleet/assign-driver', { fleetId, driverId });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response ? error.response.data.message : error.message);
+    }
+  };
+  
 export const deleteFleetVehicle = async (id) => {
     try {
         return await api.delete(`/fleet/${id}`);

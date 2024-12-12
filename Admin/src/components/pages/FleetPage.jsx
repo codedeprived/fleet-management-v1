@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { FaTruck, FaPlus, FaRegListAlt } from "react-icons/fa"; // Add icons for visual appeal
+import { FaTruck, FaPlus, FaRegListAlt, FaUserPlus } from "react-icons/fa"; // Add icons for visual appeal
 
 const FleetPage = () => {
   const navigate = useNavigate();
@@ -52,6 +52,20 @@ const FleetPage = () => {
           </div>
           <p className="text-gray-200 mt-4">
             Get a detailed overview of fleet performance, maintenance, and more.
+          </p>
+        </div>
+
+        {/* Assign Driver to Fleet Card */}
+        <div
+          className="p-6 bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg rounded-lg cursor-pointer hover:scale-105 transform transition duration-300 ease-in-out"
+          onClick={() => handleNavigation("/fleet/assign-driver")}
+        >
+          <div className="flex items-center space-x-4">
+            <FaUserPlus className="text-4xl" />
+            <h2 className="text-2xl font-semibold">Assign Driver</h2>
+          </div>
+          <p className="text-gray-200 mt-4">
+            Assign a driver to a vehicle in the fleet.
           </p>
         </div>
       </div>
