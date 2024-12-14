@@ -1,28 +1,9 @@
-const FuelLog = require('../models/FuelLog');
+const Fuel = require('../models/Fuel');
 
-// Get fuel logs (Driver: only their logs; Admin: all logs)
-/**
- * Fetches fuel logs based on user role.
- * @param {object} req - Express request object
- * @param {object} res - Express response object
- * @returns {object} List of fuel logs in JSON format or error message
- */
-const getFuelLogs = async (req, res) => {
+// Fetch all fuel logs
+const getAllFuelLogs = async (req, res) => {
     try {
-        const { role, driver_id } = req.user; // Extract role and driver_id from the authenticated user
-
-        let fuelLogs;
-        if (role === 'admin') {
-            // Admin: Fetch all fuel logs
-            fuelLogs = await FuelLog.findAll();
-        } else if (role === 'driver' && driver_id) {
-            // Driver: Fetch only their fuel logs
-            fuelLogs = await FuelLog.findAll({
-                where: { driver_id },
-            });
-        } else {
-            return res.status(403).json({ message: 'Access denied' });
-        }
+        const fuelLogs = await Fuel.findAll();
 
         if (!fuelLogs.length) {
             return res.status(404).json({ message: 'No fuel logs found' });
@@ -30,27 +11,49 @@ const getFuelLogs = async (req, res) => {
 
         res.status(200).json(fuelLogs);
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching fuel logs', error: error.message });
+        res.status(500).json({ message: 'Error fetching all fuel logs', error: error.message });
+    }
+};
+
+// Fetch fuel logs for a specific driver
+const findFuelLogsByDriver = async (req, res) => {
+    try {
+        const { driver_id } = req.user;
+
+        if (!driver_id) {
+            return res.status(403).json({ message: 'Access denied' });
+        }
+
+        const fuelLogs = await Fuel.findAll({
+            where: { driver_id },
+        });
+
+        if (!fuelLogs.length) {
+            return res.status(404).json({ message: 'No fuel logs found for this driver' });
+        }
+
+        res.status(200).json(fuelLogs);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching fuel logs for driver', error: error.message });
     }
 };
 
 // Add a new fuel log
-/**
- * Adds a new fuel log for the current driver.
- * @param {object} req - Express request object containing fuel log details
- * @param {object} res - Express response object
- * @returns {object} Created fuel log in JSON format or error message
- */
 const addFuelLog = async (req, res) => {
     try {
-        const { driver_id } = req.user; // Extract driver_id from the authenticated user
+        const { driver_id } = req.user;
+
         if (!driver_id) {
             return res.status(403).json({ message: 'Access denied' });
         }
 
         const { vehicle_id, fuel_in_liters, cost, location } = req.body;
 
-        const newFuelLog = await FuelLog.create({
+        if (!vehicle_id || !fuel_in_liters || !cost || !location) {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
+
+        const newFuelLog = await Fuel.create({
             vehicle_id,
             driver_id,
             fuel_in_liters,
@@ -65,24 +68,17 @@ const addFuelLog = async (req, res) => {
 };
 
 // Update a fuel log by ID
-/**
- * Updates a fuel log by its ID.
- * @param {object} req - Express request object containing updated fuel log details
- * @param {object} res - Express response object
- * @returns {object} Updated fuel log or error message
- */
 const updateFuelLog = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const { role, driver_id } = req.user; // Extract role and driver_id from the authenticated user
-        const fuelLog = await FuelLog.findByPk(id);
+        const { role, driver_id } = req.user;
+        const fuelLog = await Fuel.findByPk(id);
 
         if (!fuelLog) {
             return res.status(404).json({ message: 'Fuel log not found' });
         }
 
-        // Check if the user is authorized to update this log
         if (role !== 'admin' && fuelLog.driver_id !== driver_id) {
             return res.status(403).json({ message: 'Access denied' });
         }
@@ -103,24 +99,17 @@ const updateFuelLog = async (req, res) => {
 };
 
 // Delete a fuel log by ID
-/**
- * Deletes a fuel log by its ID.
- * @param {object} req - Express request object containing fuel log ID
- * @param {object} res - Express response object
- * @returns {object} Success message or error message
- */
 const deleteFuelLog = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const { role, driver_id } = req.user; // Extract role and driver_id from the authenticated user
-        const fuelLog = await FuelLog.findByPk(id);
+        const { role, driver_id } = req.user;
+        const fuelLog = await Fuel.findByPk(id);
 
         if (!fuelLog) {
             return res.status(404).json({ message: 'Fuel log not found' });
         }
 
-        // Check if the user is authorized to delete this log
         if (role !== 'admin' && fuelLog.driver_id !== driver_id) {
             return res.status(403).json({ message: 'Access denied' });
         }
@@ -134,7 +123,8 @@ const deleteFuelLog = async (req, res) => {
 };
 
 module.exports = {
-    getFuelLogs,
+    getAllFuelLogs,
+    findFuelLogsByDriver,
     addFuelLog,
     updateFuelLog,
     deleteFuelLog,

@@ -4,6 +4,7 @@ const Driver = require('../models/Driver'); // Adjusted path
 const Fleet = require('../models/Fleet'); // Adjusted path
 const Trip = require('../models/Trip'); // Adjusted path
 const Maintenance = require('../models/Maintenance'); // Adjusted path
+const Fuel = require('../models/Fuel');
 
 const testDatabase = async () => {
   try {
@@ -24,6 +25,10 @@ const testDatabase = async () => {
 
     await Maintenance.sync({ force: true }); // Sync Maintenance
     console.log('Maintenance table created.');
+
+    await Fuel.sync({force: true});
+    console.log('Fuel Table Created');
+    
 
     // Create sample admin
     const admin = await Admin.create({

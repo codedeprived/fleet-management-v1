@@ -8,6 +8,8 @@ const fleetRoutes = require('./routes/fleetRoutes');
 const adminRoutes = require('./routes/adminRoutes')
 const tripRoutes = require('./routes/tripRoutes')
 const maintenanceRoutes = require('./routes/maintenanceRoutes')
+const fuelRoutes = require('./routes/fuelRoutes')
+
 const dotenv = require ('dotenv')
 
 dotenv.config();
@@ -30,6 +32,7 @@ app.use('/api/fleet', fleetRoutes); // Add the fleet routes
 app.use('/api/admin', adminRoutes); // Add the admiin routes 
 app.use('/api/trip', tripRoutes); // Add the trip routes 
 app.use('/api/maintenance', maintenanceRoutes); // Add the maintenance routes 
+app.use('/api/fuel' , fuelRoutes);// Fuel Routes;
 
 // Define a route to handle GET requests to the root URL ('/')
 app.get('/', (req, res) => {
