@@ -88,6 +88,49 @@ export const findDriverByUsername = async (username) => {
         throw new Error(error.response ? error.response.data.message : error.message);
     }
 };
+//Fuel
+
+
+// FUEL
+export const getAllFuelLogs = async () => {
+    try {
+        return await api.get('/fuel');
+    } catch (error) {
+        throw new Error(error.response ? error.response.data.message : error.message);
+    }
+};
+
+export const addFuelLog = async (data) => {
+    try {
+        return await api.post('/fuel', data);
+    } catch (error) {
+        throw new Error(error.response ? error.response.data.message : error.message);
+    }
+};
+
+export const updateFuelLog = async (id, data) => {
+    try {
+        return await api.put(`/fuel/${id}`, data);
+    } catch (error) {
+        throw new Error(error.response ? error.response.data.message : error.message);
+    }
+};
+
+export const deleteFuelLog = async (id) => {
+    try {
+        return await api.delete(`/fuel/${id}`);
+    } catch (error) {
+        throw new Error(error.response ? error.response.data.message : error.message);
+    }
+};
+
+export const findFuelLogsByDriver = async (driverId) => {
+    try {
+        return await api.get(`/fuel/driver`, { params: { driverId } });
+    } catch (error) {
+        throw new Error(error.response ? error.response.data.message : error.message);
+    }
+};
 
 // FLEET
 // export const getFleet = () => axios.get(`${API_BASE_URL}/fleet`);

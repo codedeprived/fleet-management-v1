@@ -11,16 +11,17 @@ import FleetPage from "./components/pages/FleetPage";
 import SearchDriver from "./components/pages/DriverComponents/SearchDriver";
 import AddNewFleet from "./components/pages/FleetComponents/AddFleet";
 import DrivesTable from "./components/Tables/DrivesTable";
+import FuelTable from "./components/Tables/FuelTable";
 import TripsTable from "./components/Tables/TripsTable";
 import MaintenanceTable from "./components/Tables/MaintenanceTable";
 import FleetTable from "./components/Tables/FleetTable";
-import Login from './components/Login/Login'
-import ProfilePage from './components/Profile/ProfilePage'
-
+import Login from "./components/Login/Login";
+import ProfilePage from "./components/Profile/ProfilePage";
+import FuelPage from "./components/pages/FuelPage";
 
 const AuthenticatedLayout = () => {
   const { isDarkMode, toggleDarkMode } = useTheme();
-  
+
   return (
     <>
       <Navbar isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
@@ -36,6 +37,8 @@ const AuthenticatedLayout = () => {
             <Route path="/fleet/add" element={<AddNewFleet />} />
             <Route path="/fleet/show" element={<FleetTable />} />
             <Route path="/trips" element={<TripsTable />} />
+            <Route path="/fuel" element={<FuelPage />} />
+            <Route path="/fuel/view" element={<FuelTable />} />
             <Route path="/maintenance" element={<MaintenanceTable />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="*" element={<Navigate to="/dashboard" />} />
@@ -54,7 +57,7 @@ const App = () => {
       {/* Public Route */}
       <Route path="/" element={<Login />} />
       <Route path="/login" element={<Login />} />
-      
+
       {/* Protected Routes */}
       <Route
         path="/*"

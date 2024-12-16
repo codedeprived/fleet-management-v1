@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { getDrivers, updateDriver } from "../../services/api";
+import { getAllFuelLogs, updateFuelLog } from "../../services/api";
 import EditModal from "./EditModal";
 
-const DrivesTable = () => {
-  const [drivers, setDrivers] = useState([]);
+const FuelTable = () => {
+  const [fuelLogs, setFuelLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [editData, setEditData] = useState(null); // Hold the data being edited
   const [showModal, setShowModal] = useState(false);
 
-  // Fetch drivers data
+  // Fetch fuel logs data
   useEffect(() => {
-    const fetchDrivers = async () => {
+    const fetchFuelLogs = async () => {
       try {
-        const response = await getDrivers();
-        setDrivers(response.data);
+        const response = await getAllFuelLogs();
+        setFuelLogs(response.data); // Assuming the response contains the data correctly
       } catch (err) {
         setError(err.message);
       } finally {
@@ -22,31 +22,23 @@ const DrivesTable = () => {
       }
     };
 
-    fetchDrivers();
+    fetchFuelLogs();
   }, []);
 
   // Handle update
   const handleUpdate = async (id, updatedData) => {
     try {
-      await updateDriver(id, updatedData);
-      setDrivers((prevDrivers) =>
-        prevDrivers.map((driver) =>
-          driver.driver_id === id ? { ...driver, ...updatedData } : driver
+      await updateFuelLog(id, updatedData);
+      setFuelLogs((prevFuelLogs) =>
+        prevFuelLogs.map((log) =>
+          log.fuel_id === id ? { ...log, ...updatedData } : log
         )
       );
       setShowModal(false);
     } catch (err) {
-      alert("Error updating driver: " + err.message);
+      alert("Error updating fuel log: " + err.message);
     }
   };
-
-  // Driver fields (can be adjusted for any model)
-  const fields = [
-    { name: "username", label: "Username" },
-    { name: "email", label: "Email" },
-    { name: "license_number", label: "License Number" },
-    { name: "phone_number", label: "Phone Number" },
-  ];
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -54,25 +46,28 @@ const DrivesTable = () => {
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-6">
       <h1 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-400">
-        Drivers Table
+        Fuel Logs Table
       </h1>
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="px-6 py-3">
-              Driver ID
+              Fuel ID
             </th>
             <th scope="col" className="px-6 py-3">
-              Username
+              Vehicle ID
             </th>
             <th scope="col" className="px-6 py-3">
-              Email
+              Driver ID {/* Added column for Driver ID */}
             </th>
             <th scope="col" className="px-6 py-3">
-              License Number
+              Fuel Amount (Liters)
             </th>
             <th scope="col" className="px-6 py-3">
-              Phone Number
+              Fuel Cost
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Date
             </th>
             <th scope="col" className="px-6 py-3">
               <span className="sr-only">Edit</span>
@@ -80,25 +75,29 @@ const DrivesTable = () => {
           </tr>
         </thead>
         <tbody>
-          {drivers.map((driver) => (
+          {fuelLogs.map((log) => (
             <tr
-              key={driver.driver_id}
+              key={log.fuel_id}
               className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
             >
               <th
                 scope="row"
                 className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
               >
-                {driver.driver_id}
+                {log.fuel_id}
               </th>
-              <td className="px-6 py-4">{driver.username}</td>
-              <td className="px-6 py-4">{driver.email}</td>
-              <td className="px-6 py-4">{driver.license_number}</td>
-              <td className="px-6 py-4">{driver.phone_number}</td>
+              <td className="px-6 py-4">{log.vehicle_id}</td>
+              <td className="px-6 py-4">{log.driver_id}</td>{" "}
+              {/* Display Driver ID */}
+              <td className="px-6 py-4">{log.fuel_in_liters}</td>{" "}
+              {/* Updated field */}
+              <td className="px-6 py-4">{log.cost}</td> {/* Updated field */}
+              <td className="px-6 py-4">{log.created_at}</td>{" "}
+              {/* Updated field */}
               <td className="px-6 py-4 text-right">
                 <button
                   onClick={() => {
-                    setEditData(driver);
+                    setEditData(log);
                     setShowModal(true);
                   }}
                   className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
@@ -114,7 +113,11 @@ const DrivesTable = () => {
       {showModal && (
         <EditModal
           data={editData}
-          fields={fields}
+          fields={[
+            { name: "fuel_in_liters", label: "Fuel Amount" },
+            { name: "cost", label: "Fuel Cost" },
+            { name: "created_at", label: "Date" },
+          ]}
           onClose={() => setShowModal(false)}
           onUpdate={handleUpdate}
         />
@@ -123,4 +126,4 @@ const DrivesTable = () => {
   );
 };
 
-export default DrivesTable;
+export default FuelTable;
