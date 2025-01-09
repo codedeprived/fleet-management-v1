@@ -1,4 +1,5 @@
-import "./App.css";
+
+import React, { useState } from "react"; // Import useState
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import AdminDashboard from "./components/AdminDashboard";
@@ -21,13 +22,22 @@ import FuelPage from "./components/pages/FuelPage";
 
 const AuthenticatedLayout = () => {
   const { isDarkMode, toggleDarkMode } = useTheme();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <Navbar isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
-      <Sidebar />
+      <Navbar
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        isDarkMode={isDarkMode}
+        toggleDarkMode={toggleDarkMode}
+      />
+      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
       <div className="flex flex-1 pt-16">
-        <div className="flex-1 pl-64 p-6 overflow-y-auto">
+        <div
+          className={`flex-1 ${isOpen ? "pl-64" : "pl-0"
+            } md:pl-64 p-6 overflow-y-auto`}
+        >
           <Routes>
             <Route path="/dashboard" element={<AdminDashboard />} />
             <Route path="/drivers" element={<DriverPage />} />
@@ -54,11 +64,8 @@ const App = () => {
 
   return (
     <Routes>
-      {/* Public Route */}
       <Route path="/" element={<Login />} />
       <Route path="/login" element={<Login />} />
-
-      {/* Protected Routes */}
       <Route
         path="/*"
         element={
@@ -72,3 +79,4 @@ const App = () => {
 };
 
 export default App;
+

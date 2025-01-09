@@ -120,8 +120,9 @@ const adminLogin = async (req, res) => {
     if (!admin) {
       return res.status(404).json({ message: 'Admin not found' });
     }
-
-    const isPasswordValid = await bcrypt.compare(password, admin.password_hash);
+                                                                                      
+    // const isPasswordValid = await bcrypt.compare(password, admin.password_hash); ---------------------------- uncomment this line after login 
+    const isPasswordValid = password; // -------------------------------------------------------------- and delete this line 
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }

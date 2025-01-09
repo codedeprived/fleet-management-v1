@@ -12,7 +12,7 @@ const AnalyticsCard = ({ title, count, onClick, icon, cardClass }) => {
         </div>
         <div className="flex flex-col">
           <h2 className="text-2xl font-semibold text-white">{title}</h2>
-          <p className="text-lg font-medium text-white mt-2 truncate">{count}</p> {/* Added truncate for long text */}
+          <p className="text-lg font-medium text-white mt-2 truncate">{count}</p>
         </div>
       </div>
     </div>
