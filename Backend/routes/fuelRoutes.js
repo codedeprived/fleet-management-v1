@@ -6,6 +6,7 @@ const {
   updateFuelLog,
   deleteFuelLog,
   findFuelLogsByDriver,
+  getFuelAnalytics,
 } = require('../controllers/fuelController');
 const authMiddleware = require('../middleware/auth');
 
@@ -23,5 +24,7 @@ router.delete('/:id', authMiddleware, deleteFuelLog);
 
 // Route to find fuel logs by driver ID
 router.get('/driver', authMiddleware, findFuelLogsByDriver);
+
+router.get('/analytics' , getFuelAnalytics);
 
 module.exports = router;

@@ -132,6 +132,14 @@ export const findFuelLogsByDriver = async (driverId) => {
     }
 };
 
+export const getFuelAnalytics = async () => {
+    try {
+      return await api.get('/fuel/analytics'); // Adjust the API endpoint as needed
+    } catch (error) {
+      throw new Error(error.response ? error.response.data.message : error.message);
+    }
+  };
+
 // FLEET
 // export const getFleet = () => axios.get(`${API_BASE_URL}/fleet`);
 export const getFleet = async () => {

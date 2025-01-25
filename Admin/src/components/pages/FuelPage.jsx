@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaList, FaSearch } from "react-icons/fa";
+import FuelAnalytics from "../../components/Analytics/FuelAnalytics"; // Adjust the import path according to your file structure
 
 const FuelPage = () => {
   const navigate = useNavigate();
@@ -14,7 +15,11 @@ const FuelPage = () => {
       <h1 className="text-3xl font-bold mb-6 text-center text-indigo-600">
         Fuel Management
       </h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+      {/* Fuel Analytics Component */}
+      <FuelAnalytics />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
         {/* View All Fuel Logs Card */}
         <div
           className="p-6 bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg rounded-lg cursor-pointer hover:scale-105 transform transition duration-300 ease-in-out"

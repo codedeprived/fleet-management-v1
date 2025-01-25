@@ -67,6 +67,27 @@ const addFuelLog = async (req, res) => {
     }
 };
 
+const getFuelAnalytics = async (req, res) => {
+    try {
+      // Total fuel consumed
+      const totalFuel = await Fuel.sum('fuel_in_liters');
+  
+      // Fetch detailed logs
+      const logs = await Fuel.findAll({
+        attributes: ['fuel_in_liters', 'cost', 'location', 'vehicle_id', 'driver_id', 'created_at'],
+        order: [['created_at', 'DESC']],
+      });
+  
+      res.status(200).json({
+        totalFuel,
+        logs,
+      });
+    } catch (error) {
+      console.error('Error fetching fuel analytics:', error);
+      res.status(500).json({ error: 'An error occurred while fetching fuel analytics.' });
+    }
+  };
+
 // Update a fuel log by ID
 const updateFuelLog = async (req, res) => {
     const { id } = req.params;
@@ -128,4 +149,5 @@ module.exports = {
     addFuelLog,
     updateFuelLog,
     deleteFuelLog,
+    getFuelAnalytics,
 };
