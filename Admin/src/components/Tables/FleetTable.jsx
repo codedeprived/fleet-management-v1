@@ -1,49 +1,83 @@
 import React, { useEffect, useState } from "react";
-import { getFleet, updateFleetVehicle } from "../../services/api"; // Add `updateFleet` API
+import {
+  getFleet,
+  getDriverById,
+  updateFleetVehicle,
+} from "../../services/api";
 import EditModal from "./EditModal";
 
 const FleetTable = () => {
   const [fleet, setFleet] = useState([]);
+  const [drivers, setDrivers] = useState({}); // Store drivers as an object keyed by driver_id for quick lookup
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [editData, setEditData] = useState(null); // Data for editing
-  const [showModal, setShowModal] = useState(false); // Modal visibility
+  const [editData, setEditData] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
-  // Fetch fleet data
+  // Fetch fleet data and corresponding drivers
   useEffect(() => {
-    const fetchFleet = async () => {
+    const fetchData = async () => {
       try {
-        const response = await getFleet();
-        setFleet(response.data);
+        const fleetResponse = await getFleet();
+        const fleetData = fleetResponse.data;
+
+        // Fetch drivers based on driver_id in fleet data
+        const driverPromises = fleetData.map((vehicle) =>
+          vehicle.driver_id
+            ? getDriverById(vehicle.driver_id)
+            : Promise.resolve({ data: null })
+        );
+
+        const driverResponses = await Promise.all(driverPromises);
+        const driversData = driverResponses.reduce((acc, response, index) => {
+          const driver = response.data;
+          if (driver) {
+            acc[fleetData[index].driver_id] = driver;
+          }
+          return acc;
+        }, {});
+
+        setFleet(fleetData);
+        setDrivers(driversData);
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-    fetchFleet();
+
+    fetchData();
   }, []);
 
-  // Handle update
+  // Handle vehicle update
   const handleUpdate = async (id, updatedData) => {
     try {
-      await updateFleetVehicle(id, updatedData); // Call the updateFleet API
+      await updateFleetVehicle(id, updatedData);
       setFleet((prevFleet) =>
         prevFleet.map((vehicle) =>
           vehicle.vehicle_id === id ? { ...vehicle, ...updatedData } : vehicle
         )
       );
-      setShowModal(false); // Close modal on success
+      setShowModal(false);
     } catch (err) {
       alert("Error updating vehicle: " + err.message);
     }
   };
 
-  // Define fields for the fleet model
+  // Get driver details using drivers state
+  const getDriverDetails = (driver_id) => {
+    const driver = drivers[driver_id];
+    return driver
+      ? `${driver.username} (${driver.phone_number}, ${driver.email})`
+      : "Not Assigned";
+  };
+
+  // Fleet model fields
   const fields = [
     { name: "vehicle_type", label: "Vehicle Type" },
     { name: "chassis_number", label: "Chassis Number" },
     { name: "kilometers_driven", label: "Kilometers Driven" },
+    { name: "driver_id", label: "Assigned Driver (Driver ID)" },
   ];
 
   if (loading) return <div>Loading...</div>;
@@ -61,7 +95,8 @@ const FleetTable = () => {
             <th className="px-6 py-3">Vehicle Type</th>
             <th className="px-6 py-3">Chassis Number</th>
             <th className="px-6 py-3">Kilometers Driven</th>
-            <th scope="col" className="px-6 py-3">
+            <th className="px-6 py-3">Assigned Driver</th>
+            <th className="px-6 py-3">
               <span className="sr-only">Edit</span>
             </th>
           </tr>
@@ -70,17 +105,20 @@ const FleetTable = () => {
           {fleet.map((vehicle) => (
             <tr
               key={vehicle.vehicle_id}
-              className="bg-white border-b dark:bg-gray-800"
+              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
             >
               <td className="px-6 py-4">{vehicle.vehicle_id}</td>
               <td className="px-6 py-4">{vehicle.vehicle_type}</td>
               <td className="px-6 py-4">{vehicle.chassis_number}</td>
               <td className="px-6 py-4">{vehicle.kilometers_driven}</td>
+              <td className="px-6 py-4">
+                {getDriverDetails(vehicle.driver_id)}
+              </td>
               <td className="px-6 py-4 text-right">
                 <button
                   onClick={() => {
-                    setEditData(vehicle); // Set data for editing
-                    setShowModal(true); // Open modal
+                    setEditData(vehicle);
+                    setShowModal(true);
                   }}
                   className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                 >

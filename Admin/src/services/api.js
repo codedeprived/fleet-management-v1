@@ -169,12 +169,21 @@ export const updateFleetVehicle = async (id, data) => {
 
 export const assignDriverToFleet = async (fleetId, driverId) => {
     try {
-      const response = await axios.post('/api/fleet/assign-driver', { fleetId, driverId });
+     console.log("api reached");
+      const response = await api.put(`fleet/assign-driver/${fleetId}`, {driverId});
       return response.data;
     } catch (error) {
       throw new Error(error.response ? error.response.data.message : error.message);
     }
   };
+export const unassignDriverFromFleet = async (fleetId) => {
+    try {
+      const response = await api.post(`fleet/unassign-driver/${fleetId}`);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response ? error.response.data.message : error.message);
+    }
+};
   
 export const deleteFleetVehicle = async (id) => {
     try {
@@ -191,6 +200,8 @@ export const findFleetByChassis = async (chassisNumber) => {
         throw new Error(error.response ? error.response.data.message : error.message);
     }
 };
+
+
 
 // MAINTENANCE
 // export const getMaintenanceRecords = () => axios.get(`${API_BASE_URL}/maintenance`);

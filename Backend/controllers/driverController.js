@@ -1,5 +1,4 @@
 const Driver = require('../models/Driver');
-
 /**
  * Get all drivers
  * @route GET /api/drivers
@@ -13,14 +12,12 @@ const getAllDrivers = async (req, res) => {
     res.status(500).json({ message: 'Error fetching drivers', error: error.message }); // Return 500 status code with error message
   }
 };
-
 /**
  * Add a new driver
  * @route POST /api/drivers
  */
 const addDriver = async (req, res) => {
   const { username, password_hash, email, license_number, phone_number } = req.body; // Removed organization_id
-
   try {
     // Create a new driver entry in the database
     const newDriver = await Driver.create({
@@ -50,19 +47,16 @@ const addDriver = async (req, res) => {
 const updateDriver = async (req, res) => {
   const { id } = req.params; // Extract driver ID from request params
   const { username, email, license_number, phone_number } = req.body; // Extract fields to update from request body
-
   try {
     const driver = await Driver.findByPk(id); // Find driver by primary key (ID)
     if (!driver) {
       return res.status(404).json({ message: 'Driver not found' }); // Return 404 if driver doesn't exist
     }
-
     // Update driver fields if they are provided, otherwise keep the existing values
     driver.username = username || driver.username;
     driver.email = email || driver.email;
     driver.license_number = license_number || driver.license_number;
     driver.phone_number = phone_number || driver.phone_number;
-
     await driver.save(); // Save updated driver to the database
     res.json(driver); // Return the updated driver
   } catch (error) {
@@ -70,7 +64,6 @@ const updateDriver = async (req, res) => {
     res.status(500).json({ message: 'Error updating driver', error: error.message }); // Return 500 status code with error message
   }
 };
-
 /**
  * Delete a driver by ID
  * @route DELETE /api/drivers/:id
@@ -97,7 +90,6 @@ const deleteDriver = async (req, res) => {
  */
 const getDriverById = async (req, res) => {
   const { id } = req.params; // Extract driver ID from request params
-
   try {
     const driver = await Driver.findByPk(id); // Find driver by primary key (ID)
     if (!driver) {

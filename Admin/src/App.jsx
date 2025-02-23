@@ -1,4 +1,3 @@
-
 import React, { useState } from "react"; // Import useState
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
@@ -19,6 +18,8 @@ import FleetTable from "./components/Tables/FleetTable";
 import Login from "./components/Login/Login";
 import ProfilePage from "./components/Profile/ProfilePage";
 import FuelPage from "./components/pages/FuelPage";
+import AssignFleet from "./components/pages/FleetComponents/AssignFleet";
+import UnassignDriver from "./components/pages/FleetComponents/UnassignDriver";
 
 const AuthenticatedLayout = () => {
   const { isDarkMode, toggleDarkMode } = useTheme();
@@ -35,8 +36,9 @@ const AuthenticatedLayout = () => {
       <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
       <div className="flex flex-1 pt-16">
         <div
-          className={`flex-1 ${isOpen ? "pl-64" : "pl-0"
-            } md:pl-64 p-6 overflow-y-auto`}
+          className={`flex-1 ${
+            isOpen ? "pl-64" : "pl-0"
+          } md:pl-64 p-6 overflow-y-auto`}
         >
           <Routes>
             <Route path="/dashboard" element={<AdminDashboard />} />
@@ -45,6 +47,8 @@ const AuthenticatedLayout = () => {
             <Route path="/driver/search" element={<SearchDriver />} />
             <Route path="/fleet" element={<FleetPage />} />
             <Route path="/fleet/add" element={<AddNewFleet />} />
+            <Route path="/fleet/assign-driver" element={<AssignFleet />} />
+            <Route path="/fleet/unassign-driver" element={<UnassignDriver />} />
             <Route path="/fleet/show" element={<FleetTable />} />
             <Route path="/trips" element={<TripsTable />} />
             <Route path="/fuel" element={<FuelPage />} />
@@ -79,4 +83,3 @@ const App = () => {
 };
 
 export default App;
-

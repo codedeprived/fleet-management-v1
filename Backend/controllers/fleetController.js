@@ -109,10 +109,57 @@ const findVehicleByChassisNumber = async (req, res) => {
   }
 };
 
+// controllers/fleetController.js
+ const unassignDriverFromFleet = async (req, res) => {
+  const  {fleetId}  = req.params;
+
+  try {
+    console.log(fleetId);
+    const fleet = await Fleet.findByPk(fleetId);
+    if (!fleet) return res.status(404).json({ message: "Fleet what vehicle not found." });
+
+    if (!fleet.driver_id) return res.status(400).json({ message: "No driver is assigned to this vehicle." });
+
+    fleet.driver_id = null;
+    await fleet.save();
+
+    res.status(200).json({ message: "Driver unassigned successfully.", fleet });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
+
+//Assing Driver to Fleet
+ const AssignDriverToFleet = async (req, res) => {
+  const  {fleetId}  = req.params;
+  console.log(fleetId);
+  const {driverId} = req.body;
+  console.log(driverId);
+
+  try {
+    const fleet = await Fleet.findByPk(fleetId);
+    if (!fleet) return res.status(404).json({ message: "Fleet vehicle not found." });
+
+    if (fleet.driver_id) {
+      return res.status(400).json({ message: "This vehicle already has a driver assigned." });
+    }
+    fleet.driver_id = driverId;
+    await fleet.save();
+
+    res.status(200).json({ message: "Driver assigned successfully.", fleet });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
+
 module.exports = {
   getAllFleet,
   addVehicleToFleet,
   updateVehicleInFleet,
   deleteVehicleFromFleet,
   findVehicleByChassisNumber,
+  unassignDriverFromFleet,
+  AssignDriverToFleet,
 };
