@@ -20,6 +20,7 @@ import ProfilePage from "./components/Profile/ProfilePage";
 import FuelPage from "./components/pages/FuelPage";
 import AssignFleet from "./components/pages/FleetComponents/AssignFleet";
 import UnassignDriver from "./components/pages/FleetComponents/UnassignDriver";
+import AdminRegistration from "./components/Registerion/AdminRegistration";
 
 const AuthenticatedLayout = () => {
   const { isDarkMode, toggleDarkMode } = useTheme();
@@ -70,6 +71,8 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/admin/register" element={<AdminRegistration />} /> {/* New Registration Route */}
+
       <Route
         path="/*"
         element={

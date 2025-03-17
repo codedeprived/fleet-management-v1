@@ -104,6 +104,13 @@ const AdminLogin = () => {
           >
             Forgot Password?
           </button>
+          <button
+            type="button"
+            onClick={() => navigate('/admin/register')}
+            className="w-full py-2 mt-4 bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white rounded-md hover:bg-gradient-to-br focus:outline-none"
+          >
+            Register?
+          </button>
         </form>
       </div>
     </div>
