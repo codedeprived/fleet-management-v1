@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,16 +12,17 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('jwtToken'); // Remove token from local storage
+    localStorage.removeItem("jwtToken"); // Remove token from local storage
     logout(); // Update isAuthenticated to false
-    navigate('/'); // Redirect to landing page
+    navigate("/"); // Redirect to landing page
   };
 
   return (
     <nav className="bg-blue-600 p-4 shadow-md text-white">
       <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-lg font-semibold">Fleet Manager</h1>
-        
+        <Link to="/dashboard">
+          <h1 className="text-lg font-semibold">Fleet Manager</h1>
+        </Link>
         {/* Hamburger Icon for Small Screens */}
         <button
           className="block md:hidden focus:outline-none"
@@ -49,7 +49,10 @@ const Navbar = () => {
           {isAuthenticated ? (
             <>
               <li>
-                <Link to="/dashboard" className="hover:text-blue-200 transition">
+                <Link
+                  to="/dashboard"
+                  className="hover:text-blue-200 transition"
+                >
                   Dashboard
                 </Link>
               </li>
@@ -59,7 +62,10 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/maintenance" className="hover:text-blue-200 transition">
+                <Link
+                  to="/maintenance"
+                  className="hover:text-blue-200 transition"
+                >
                   Maintenance
                 </Link>
               </li>
@@ -81,7 +87,10 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/registration" className="hover:text-blue-200 transition">
+                <Link
+                  to="/registration"
+                  className="hover:text-blue-200 transition"
+                >
                   Register
                 </Link>
               </li>
@@ -159,6 +168,5 @@ const Navbar = () => {
     </nav>
   );
 };
-
 
 export default Navbar;
