@@ -18,7 +18,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-blue-600 p-4 shadow-md text-white">
+    <nav className="bg-blue-600 p-4 shadow-md text-white ">
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/dashboard">
           <h1 className="text-lg font-semibold">Fleet Manager</h1>
@@ -67,6 +67,14 @@ const Navbar = () => {
                   className="hover:text-blue-200 transition"
                 >
                   Maintenance
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/fuel-log"
+                  className="hover:text-blue-200 transition"
+                >
+                  fule
                 </Link>
               </li>
               <li>
